@@ -1,3 +1,2 @@
 # Corvus
-## Track and share your favorite cheeses
-===========
+Track and share your favorite cheeses
