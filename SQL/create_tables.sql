@@ -3,7 +3,7 @@ CREATE DATABASE CheeseDiary;
 -- Users
 USE CheeseDiary;
 CREATE TABLE Users (
-  UserID INT NOT NULL,
+  UserID INT NOT NULL AUTO_INCREMENT,
   Name VARCHAR(100) NOT NULL,
   Email VARCHAR(320) NOT NULL,
   DisplayName VARCHAR(20) NOT NULL,
@@ -15,14 +15,14 @@ CREATE TABLE Users (
 
 -- Cheeses
 CREATE TABLE Cheeses (
-  CheeseID INT NOT NULL,
+  CheeseID INT NOT NULL AUTO_INCREMENT,
   Name VARCHAR(100) NOT NULL,
   PRIMARY KEY (CheeseID)
 );
 
 -- Tags
 CREATE TABLE Tags (
-  TagID INT NOT NULL,
+  TagID INT NOT NULL AUTO_INCREMENT,
   Tag VARCHAR(30) NOT NULL,
   UNIQUE(Tag),
   PRIMARY KEY (TagID)
@@ -30,7 +30,7 @@ CREATE TABLE Tags (
 
 -- Cheesemakers
 CREATE TABLE Cheesemakers (
-  CheesemakerID INT NOT NULL,
+  CheesemakerID INT NOT NULL AUTO_INCREMENT,
   Name VARCHAR(100) NOT NULL,
   Location VARCHAR(100) NOT NULL,
   PRIMARY KEY (CheesemakerID)
@@ -47,7 +47,7 @@ CREATE TABLE CheeseCheesemaker (
 
 -- Cheeseshops
 CREATE TABLE Cheeseshops (
-  CheeseshopID INT NOT NULL,
+  CheeseshopID INT NOT NULL AUTO_INCREMENT,
   Name VARCHAR(100) NOT NULL,
   Street VARCHAR(100) NOT NULL,
   ZipCode MEDIUMINT (5) UNSIGNED ZEROFILL,
@@ -60,7 +60,7 @@ CREATE TABLE Cheeseshops (
 
 -- Reviews
 CREATE TABLE Reviews (
-  ReviewID INT NOT NULL,
+  ReviewID INT NOT NULL AUTO_INCREMENT,
   Photo VARCHAR(512), -- url to storage
   Rating INT,
   TastingNotes VARCHAR(500),
