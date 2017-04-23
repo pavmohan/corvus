@@ -72,7 +72,7 @@ INSERT INTO CheeseReview (ReviewID, CheeseID) values (1, 1);
 
 -- *****************************************************************************
 -- Add CheeseshopReview
-INSERT INTO CheeseshopReview (CheeseshopID, ReviewID, PricePerLb) values ();
+INSERT INTO CheeseshopReview (CheeseshopID, ReviewID, PricePerLb) values (1, 1, 18.99);
 
 -- *****************************************************************************
 -- Add TagReview
