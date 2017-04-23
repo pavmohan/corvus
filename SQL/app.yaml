@@ -1,0 +1,18 @@
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /
+  script: main.app
+
+libraries:
+- name: MySQLdb
+  version: "latest"
+
+# [START env_variables]
+env_variables:
+    CLOUDSQL_CONNECTION_NAME: cheese-diary:us-central1:sql-instance
+    CLOUDSQL_USER: corvus
+    CLOUDSQL_PASSWORD: [CHANGEME]
+# [END env_variables]
