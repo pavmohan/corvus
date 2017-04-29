@@ -144,3 +144,11 @@ body {
   font-weight: 600;
   margin-bottom: 15px;
 }
+
+/* Cheese Icon */
+.icon-cheese img {
+  float: none;
+  margin: 0 auto;
+  width: 30%;
+  height: 30%;
+}
