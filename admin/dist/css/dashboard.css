@@ -103,3 +103,44 @@ body {
   display: inline-block;
   border-radius: 50%;
 }
+
+/*
+  Profile
+  Source: http://bootsnipp.com/snippets/featured/user-profile-sidebar
+*/
+.profile-sidebar {
+  padding: 20px 0 10px 0;
+  background: #fff;
+  border-radius: 15px;
+  border: 2px solid #D13525;
+}
+
+.profile-userpic img {
+  float: none;
+  margin: 0 auto;
+  width: 50%;
+  height: 50%;
+  -webkit-border-radius: 50% !important;
+  -moz-border-radius: 50% !important;
+  border-radius: 50% !important;
+}
+
+.profile-usertitle {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.profile-usertitle-name {
+  color: #D13525;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.profile-usertitle-location {
+  text-transform: uppercase;
+  color: #4C3F54;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
