@@ -18,7 +18,7 @@ class MainPage(webapp2.RequestHandler):
             'projectName': PROJECTNAME,
         }
 
-        template = JINJA_ENVIRONMENT.get_template('dashboard.html')
+        template = JINJA_ENVIRONMENT.get_template('templates/dashboard.html')
         self.response.write(template.render(template_values))
 
 app = webapp2.WSGIApplication([
