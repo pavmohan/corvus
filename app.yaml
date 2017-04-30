@@ -6,6 +6,40 @@ handlers:
 - url: /
   script: cheesediary.app.app
 
+- url: /users
+  script: cheesediary.user.app
+- url: /user/.*
+  script: cheesediary.user.app
+
+- url: /cheeses
+  script: cheesediary.cheese.app
+- url: /cheese/.*
+  script: cheesediary.cheese.app
+
+- url: /cheesemakers
+  script: cheesediary.cheesemaker.app
+- url: /cheesemaker/.*
+  script: cheesediary.cheesemaker.app
+
+- url: /cheeseshops
+  script: cheesediary.cheeseshop.app
+- url: /cheeseshop/.*
+  script: cheesediary.cheeseshop.app
+
+- url: /tags
+  script: cheesediary.tag.app
+- url: /tag/.*
+  script: cheesediary.tag.app
+
+- url: /reviews
+  script: cheesediary.review.app
+- url: /review/.*
+  script: cheesediary.review.app
+
+- url: /.*
+  script: cheesediary.nope.app
+
+
 libraries:
 - name: webob
   version: "1.1.1"
