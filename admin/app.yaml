@@ -3,14 +3,14 @@ api_version: 1
 threadsafe: yes
 
 handlers:
-- url: /
-  script: main.app
-
 - url: /dist
   static_dir: dist
 
 - url: /assets
   static_dir: assets
+
+- url: /.*
+  script: main.app
 
 # [START libraries]
 libraries:
