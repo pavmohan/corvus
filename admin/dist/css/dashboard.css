@@ -44,8 +44,8 @@ body {
     padding: 20px;
     overflow-x: hidden;
     overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-    background-color: #f5f5f5;
-    border-right: 1px solid #eee;
+    background-color: #E3E3E3;
+    border-right: 1px solid #E3E3E3;
   }
 }
 
@@ -63,7 +63,7 @@ body {
 .nav-sidebar > .active > a:hover,
 .nav-sidebar > .active > a:focus {
   color: #fff;
-  background-color: #428bca;
+  background-color: #968A8A;
 }
 
 
@@ -102,4 +102,53 @@ body {
 .placeholder img {
   display: inline-block;
   border-radius: 50%;
+}
+
+/*
+  Profile
+  Source: http://bootsnipp.com/snippets/featured/user-profile-sidebar
+*/
+.profile-sidebar {
+  padding: 20px 0 10px 0;
+  background: #fff;
+  border-radius: 15px;
+  border: 2px solid #D13525;
+}
+
+.profile-userpic img {
+  float: none;
+  margin: 0 auto;
+  width: 50%;
+  height: 50%;
+  -webkit-border-radius: 50% !important;
+  -moz-border-radius: 50% !important;
+  border-radius: 50% !important;
+}
+
+.profile-usertitle {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.profile-usertitle-name {
+  color: #D13525;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.profile-usertitle-location {
+  text-transform: uppercase;
+  color: #4C3F54;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+/* Cheese Icon */
+.icon-cheese img {
+  float: none;
+  margin: 0 auto;
+  width: 30%;
+  height: 30%;
 }
