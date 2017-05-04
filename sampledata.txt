@@ -1,0 +1,14 @@
+MAKER
+[{"Name":"Try Me Once","Location":"Seattle WA"},{"Name":"Walter White and Jesse","Location":"Seattle WA"},{"Name":"Daisy Midnight","Location":"Seattle WA"}]
+
+SHOP
+[{"Name":"Little Piggy's Market","Street":"22 Sundown Place SE","ZipCode":"98012","City":"Mill Creek","State":"WA","Country":"98012","Phone":"(425)667-2321"},{"Name":"Los Pollos Hermanos","Street":"123 Gus Fring Street","ZipCode":"98012","City":"Mill Creek","State":"WA","Country":"USA","Phone":"(425)555-4242"},{"Name":"Anabellum Mist","Street":"86 Carver Avenue","ZipCode":"98012","City":"Mill Creek","State":"WA","Country":"USA","Phone":"(425)983-2172"}]
+
+CHEESE
+[{"Name":"Cuts like a Cheddar","MakerName":"Try Me Once"},{"Name":"Mozzy like Drugs","MakerName":"Walter White and Jesse"},{"Name":"Breeing Bad","MakerName":"Walter White and Jesse"},{"Name":"Gorgonzola Moon","MakerName":"Daisy Midnight"},{"Name":"Annie America Style","MakerName":"Try Me Once"},{"Name":"Ricky Ricotta","MakerName":"Daisy Midnight"},{"Name":"Pepe Silvia","MakerName":"Walter White and Jesse"},{"Name":"Nicolette's Sampler","MakerName":"Try Me Once"},{"Name":"Prepster Provolone","MakerName":"Daisy Midnight"},{"Name":"Slick Swiss","MakerName":"Try Me Once"}]
+
+USER
+[{"Name":"Rodney Lighter","Email":"hotrod21@gmail.com","DisplayName":"Suntan Simon","IsAdmin":false},{"Name":"Saul Goodman","Email":"bettercallsaul@gmail.com","DisplayName":"Lawyer Guy","IsAdmin":false},{"Name":"Shawn Baxter","Email":"shbax@gmail.com","DisplayName":"Shaxer","IsAdmin":false}]
+
+REVIEWS
+[{"TastingNotes":"Like it with the ham","Photo":"www.flickr.com/stillhere","Rating":5,"Price":2,"MakerName":"Try Me Once","ShopName":"Little Piggy's Market","CheeseName":"Cuts like a Cheddar","UserName":"Rodney Lighter"},{"TastingNotes":"Good stuff man","Photo":"","Rating":4,"Price":2,"MakerName":"Walter White and Jesse","ShopName":"Los Pollos Hermanos","CheeseName":"Breeing Bad","UserName":"Saul Goodman"},{"TastingNotes":"Twinkles on the tougue","Photo":"www.flickr.com/","Rating":3,"Price":3,"MakerName":"Daisy Midnight","ShopName":"Anabellum Mist","CheeseName":"Gorgonzola Moon","UserName":"Shawn Baxter"}]
