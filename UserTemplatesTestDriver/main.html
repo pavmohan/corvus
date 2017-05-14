@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.js"></script>
+
+
+<style>
+.box {
+        width: 35%;
+        margin: auto;
+        margin-bottom:20px;
+        border-style: solid;
+}
+#profile {
+        text-align: center;
+}
+h3,input{
+        margin-left:10px;
+}
+form{
+        margin-left:20px;
+}
+button{
+    margin-bottom:15px;
+}
+</style>
+
+
+<body ng-app="myApp">
+
+
+<a href="#/userprofile/ahdzfnN0YXRpYy1wb3R0ZXJ5LTE2NDEwOXIRCxIEVXNlchiAgICAgOSRCQw">Enter here</a>
+<a href="#/cheeseprofile/ahdzfnN0YXRpYy1wb3R0ZXJ5LTE2NDEwOXITCxIGQ2hlZXNlGICAgICZ0oUKDA">Enter here</a>
+<a href="#/cheesemakerprofile/ahdzfnN0YXRpYy1wb3R0ZXJ5LTE2NDEwOXIYCxILQ2hlZXNlTWFrZXIYgICAgN7qiQkM">Cheesemaker</a>
+<a href="#/cheeseshopprofile/ahdzfnN0YXRpYy1wb3R0ZXJ5LTE2NDEwOXIXCxIKQ2hlZXNlU2hvcBiAgICAvJ-bCww">CheeseShop</a>
+<div ng-view></div>
+
+<script>
+var app = angular.module("myApp", ["ngRoute"]);
+app.config(function($routeProvider) {
+    $routeProvider
+    .when("/", {
+        templateUrl : "main.htm"
+    })
+    .when("/userprofile/:uID", {
+        templateUrl : "userprofile.htm",
+	controller : "userCtrl"
+    })
+    .when("/cheeseprofile/:uID", {
+        templateUrl : "cheeseprofile.htm",
+        controller : "cheeseCtrl"
+    })
+    .when("/cheesemakerprofile/:uID", {
+        templateUrl : "cheesemakerprofile.htm",
+        controller : "cheesemakerCtrl"
+    })
+    .when("/cheeseshopprofile/:uID", {
+        templateUrl : "cheeseshopprofile.htm",
+        controller : "cheeseshopCtrl"
+    })
+});
+
+
+app.controller("userCtrl",['$scope','$http','$routeParams', function ($scope,$http, $routeParams) {
+$scope.msg = "Where were you when we ran";
+$scope.msg = $routeParams;
+
+$scope.user={DisplayName:"Crystal", Name:"Sherry", TimeCreated:"Right Now"};
+$scope.test = "";
+
+$http({
+        method : "GET",
+        url : ("https://static-pottery-164109.appspot.com/users/"+$scope.msg.uID)
+    }).then(function mySucces(response) {
+        $scope.user = response.data;
+    });
+
+$scope.makerArr=[];
+$scope.shopArr=[];
+$scope.cheeseArr=[];
+$scope.userArr=[];
+$scope.revArr=[];
+
+$scope.makerCount=0;
+$scope.shopCount=0;
+$scope.cheeseCount=0;
+$scope.userCount=0;
+$scope.revCount=0;
+$scope.makerTemp={Name: "", Location: ""};
+$scope.shopTemp={City: "", Name: "", Country: "", ZipCode: "", Phone: "", State: "", Street: "", Id: ""};
+$scope.cheeseTemp={MakerID: "", Name: "", Id : ""};
+$scope.userTemp={DisplayName: "", Name: "", TimeCreated: "", Email: "", IsAdmin: false, Id: ""};
+
+
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/cheesemakers"
+    }).then(function mySucces(response) {
+        $scope.makerArr = response.data;
+    });
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/cheeseshops"
+    }).then(function mySucces(response) {
+        $scope.shopArr = response.data;
+    });
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/cheeses"
+    }).then(function mySucces(response) {
+        $scope.cheeseArr = response.data;
+    });
+
+
+
+$scope.getReviews= function() {
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/users/"+$scope.msg.uID+"/reviews"
+    }).then(function (response) {
+        $scope.revArr = response.data;
+        var i;
+        var rLen = $scope.revArr.length;
+        for(i =0; i < rLen; i++){
+                $scope.revArr[i].upd= true;
+        }
+    });
+};
+
+
+$scope.getReviews();
+$scope.addMaker = function() {
+        $http({
+                method: "POST",
+                url:"https://static-pottery-164109.appspot.com/cheesemakers/create",
+                data: angular.toJson($scope.makerTemp)
+        }).then(function(response) {
+                $scope.makerArr.push(response.data);
+        });
+       $scope.makerTemp={Name: "", Location: ""};
+};
+
+
+$scope.addShop = function() {
+        $http({
+                method: "POST",
+                url:"https://static-pottery-164109.appspot.com/cheeseshops/create",
+                data: angular.toJson($scope.shopTemp)
+        }).then(function(response) {
+                $scope.shopArr.push(response.data);
+        });
+        $scope.shopTemp={City: "", Name: "", Country: "", ZipCode: "", Phone: "", State: "", Street: "", Id: ""};
+};
+
+
+$scope.addCheese = function() {
+                                $http({
+                                        method: "POST",
+                                        url:"https://static-pottery-164109.appspot.com/cheeses/create",
+                                        data: angular.toJson($scope.cheeseTemp)
+                                }).then(function(response) {
+                                        $scope.cheeseArr.push(response.data);
+                                });
+                                $scope.cheeseTemp={MakerID: "", Name: "", Id : ""};
+                }
+$scope.revTemp={Rating: 0, TastingNotes: "", Photo: "None", UserID: "", ShopID: "", PricePerPound: -1, CheeseID: "", Id: ""};
+$scope.revTemp2={Rating: 0, TastingNotes: "", Photo: "None", UserID: "", ShopID: "", PricePerPound: -1, CheeseID: "", Id: ""};
+
+
+
+$scope.addRev = function() {
+                                $scope.revTemp2.UserID = $scope.user.Id;
+                                $http({
+                                        method: "POST",
+                                        url:"https://static-pottery-164109.appspot.com/reviews/create",
+                                        data: angular.toJson($scope.revTemp2)
+                                }).then(function(response) {
+                                        $scope.revTemp2=response.data;
+                                        $scope.revTemp2.upd=true;
+                                        $scope.revArr.unshift($scope.revTemp2);
+                                        $scope.revTemp2={Rating: 0, TastingNotes: "", Photo: "None", UserID: "", ShopID: "", PricePerPound: -1, CheeseID: "", Id: ""};
+                                });
+                };
+
+
+$scope.edit= function(x){
+                        if(!$scope.updLock){
+                                x.upd=false;
+                                $scope.revTemp=angular.copy(x);
+                                $scope.updLock=true;
+                        }
+                };
+$scope.cancel=function(x){
+                        $scope.revTemp={Rating: -1, TastingNotes: "", Photo: "None", UserID: "", ShopID: "", PricePerPound: -1, CheeseID: "", Id: ""};
+                        $scope.updLock=false;
+                        x.upd=true;
+                };
+
+$scope.insideFunction="Outside function";
+$scope.update=function(x){
+                        var target = "https://static-pottery-164109.appspot.com/reviews/"+x.Id+"/edit";
+                        angular.copy($scope.revTemp,x);
+                        $scope.insideFunction=target;
+                        $scope.revTemp.Rating=parseInt($scope.revTemp.Rating);
+                        $scope.revTemp.PricePerPound=parseInt($scope.revTemp.PricePerPound);
+                        $http({
+                                        method: "PUT",
+                                        url:target,
+                                        data: angular.toJson($scope.revTemp)
+                        }).then(function(response) {
+                                $scope.test=response;
+                                $scope.insideFunction="Inside function";
+                        });
+                        $scope.updLock = false;
+                        x.upd = true;
+                };
+
+
+
+}]);
+
+
+
+
+app.controller("cheeseCtrl",['$scope','$http','$routeParams', function ($scope,$http, $routeParams) {
+$scope.msg = "Where were you when we ran";
+$scope.msg = $routeParams;
+$scope.cheese={};
+$scope.test = "";
+$http({
+        method : "GET",
+        url : ("https://static-pottery-164109.appspot.com/cheeses/"+$scope.msg.uID)
+    }).then(function mySucces(response) {
+        $scope.cheese = response.data;
+    });
+
+$scope.makerArr=[];
+$scope.shopArr=[];
+$scope.cheeseArr=[];
+$scope.userArr=[];
+$scope.revArr=[];
+$scope.makerCount=0;
+$scope.shopCount=0;
+$scope.cheeseCount=0;
+$scope.userCount=0;
+$scope.revCount=0;
+$scope.makerTemp={Name: "", Location: ""};
+$scope.shopTemp={City: "", Name: "", Country: "", ZipCode: "", Phone: "", State: "", Street: "", Id: ""};
+$scope.cheeseTemp={MakerID: "", Name: "", Id : ""};
+$scope.userTemp={DisplayName: "", Name: "", TimeCreated: "", Email: "", IsAdmin: false, Id: ""};
+
+
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/users"
+    }).then(function mySucces(response) {
+        $scope.userArr = response.data;
+    });
+
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/cheesemakers"
+    }).then(function mySucces(response) {
+        $scope.makerArr = response.data;
+    });
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/cheeseshops"
+    }).then(function mySucces(response) {
+        $scope.shopArr = response.data;
+    });
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/cheeses"
+    }).then(function mySucces(response) {
+        $scope.cheeseArr = response.data;
+    });
+
+
+
+$scope.getReviews= function() {
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/cheeses/"+$scope.msg.uID+"/reviews"
+    }).then(function (response) {
+        $scope.revArr = response.data;
+        var i;
+        var rLen = $scope.revArr.length;
+        for(i =0; i < rLen; i++){
+                $scope.revArr[i].upd= true;
+        }
+    });
+};
+$scope.getReviews();
+
+/*
+$scope.addMaker = function() {
+        $http({
+                method: "POST",
+                url:"https://static-pottery-164109.appspot.com/cheesemakers/create",
+                data: angular.toJson($scope.makerTemp)
+        }).then(function(response) {
+                $scope.makerArr.push(response.data);
+        });
+       $scope.makerTemp={Name: "", Location: ""};
+};
+*/
+          
+
+$scope.addShop = function() {
+        $http({
+                method: "POST",
+                url:"https://static-pottery-164109.appspot.com/cheeseshops/create",
+                data: angular.toJson($scope.shopTemp)
+        }).then(function(response) {
+                $scope.shopArr.push(response.data);
+        });
+        $scope.shopTemp={City: "", Name: "", Country: "", ZipCode: "", Phone: "", State: "", Street: "", Id: ""};
+};
+
+/*
+$scope.addCheese = function() {
+                                $http({
+                                        method: "POST",
+                                        url:"https://static-pottery-164109.appspot.com/cheeses/create",
+                                        data: angular.toJson($scope.cheeseTemp)
+                                }).then(function(response) {
+                                        $scope.cheeseArr.push(response.data);
+                                });
+                                $scope.cheeseTemp={MakerID: "", Name: "", Id : ""};
+                }
+*/
+
+$scope.revTemp={Rating: 0, TastingNotes: "", Photo: "None", UserID: "", ShopID: "", PricePerPound: -1, CheeseID: "", Id: ""};
+$scope.revTemp2={Rating: 0, TastingNotes: "", Photo: "None", UserID: "", ShopID: "", PricePerPound: -1, CheeseID: "", Id: ""};
+
+
+$scope.addRev = function() {
+                                $scope.revTemp2.UserID = "ahdzfnN0YXRpYy1wb3R0ZXJ5LTE2NDEwOXIRCxIEVXNlchiAgICAgOSRCQw";
+                                $http({
+                                        method: "POST",
+                                        url:"https://static-pottery-164109.appspot.com/reviews/create",
+                                        data: angular.toJson($scope.revTemp2)
+                                }).then(function(response) {
+                                        $scope.revTemp2=response.data;
+                                        $scope.revTemp2.upd=true;
+                                        $scope.revArr.unshift($scope.revTemp2);
+                                        $scope.revTemp2={Rating: 0, TastingNotes: "", Photo: "None", UserID: "", ShopID: "", PricePerPound: -1, CheeseID: "", Id: ""};
+                                });
+                };
+
+
+$scope.edit= function(x){
+                        if(!$scope.updLock){
+                                x.upd=false;
+                                $scope.revTemp=angular.copy(x);
+                                $scope.updLock=true;
+                        }
+                };
+$scope.cancel=function(x){
+                        $scope.revTemp={Rating: -1, TastingNotes: "", Photo: "None", UserID: "", ShopID: "", PricePerPound: -1, CheeseID: "", Id: ""};
+                        $scope.updLock=false;
+                        x.upd=true;
+                };
+
+
+
+$scope.insideFunction="Outside function";
+$scope.update=function(x){
+                        var target = "https://static-pottery-164109.appspot.com/reviews/"+x.Id+"/edit";
+                        angular.copy($scope.revTemp,x);
+                        $scope.insideFunction=target;
+                        $scope.revTemp.Rating=parseInt($scope.revTemp.Rating);
+                        $scope.revTemp.PricePerPound=parseInt($scope.revTemp.PricePerPound);
+                        $http({
+                                        method: "PUT",
+                                        url:target,
+                                        data: angular.toJson($scope.revTemp)
+                        }).then(function(response) {
+                                $scope.test=response;
+                                $scope.insideFunction="Inside function";
+                        });
+                        $scope.updLock = false;
+                        x.upd = true;
+                };
+
+
+}]);
+
+
+app.controller("cheesemakerCtrl",['$scope','$http','$routeParams', function ($scope,$http, $routeParams) {
+$scope.msg = "Where were you when we ran";
+$scope.msg = $routeParams;
+$scope.cheesemaker={};
+$scope.test = "";
+$http({
+        method : "GET",
+        url : ("https://static-pottery-164109.appspot.com/cheesemakers/"+$scope.msg.uID)
+    }).then(function mySucces(response) {
+        $scope.cheesemaker = response.data;
+    });
+
+$scope.makerArr=[];
+$scope.shopArr=[];
+$scope.cheeseArr=[];
+$scope.userArr=[];
+$scope.revArr=[];
+$scope.makerCount=0;
+$scope.shopCount=0;
+$scope.cheeseCount=0;
+$scope.userCount=0;
+$scope.revCount=0;
+$scope.makerTemp={Name: "", Location: ""};
+$scope.shopTemp={City: "", Name: "", Country: "", ZipCode: "", Phone: "", State: "", Street: "", Id: ""};
+$scope.cheeseTemp={MakerID: "", Name: "", Id : ""};
+$scope.userTemp={DisplayName: "", Name: "", TimeCreated: "", Email: "", IsAdmin: false, Id: ""};
+
+
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/users"
+    }).then(function mySucces(response) {
+        $scope.userArr = response.data;
+    });
+
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/cheesemakers"
+    }).then(function mySucces(response) {
+        $scope.makerArr = response.data;
+    });
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/cheeseshops"
+    }).then(function mySucces(response) {
+        $scope.shopArr = response.data;
+    });
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/cheeses"
+    }).then(function mySucces(response) {
+        $scope.cheeseArr = response.data;
+    });
+
+
+
+$scope.getReviews= function() {
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/cheesemakers/"+$scope.msg.uID+"/reviews"
+    }).then(function (response) {
+        $scope.revArr = response.data;
+        var i;
+        var rLen = $scope.revArr.length;
+        for(i =0; i < rLen; i++){
+                $scope.revArr[i].upd= true;
+        }
+    });
+};
+$scope.getReviews();
+
+/*
+$scope.addMaker = function() {
+        $http({
+                method: "POST",
+                url:"https://static-pottery-164109.appspot.com/cheesemakers/create",
+                data: angular.toJson($scope.makerTemp)
+        }).then(function(response) {
+                $scope.makerArr.push(response.data);
+        });
+       $scope.makerTemp={Name: "", Location: ""};
+};
+*/
+          
+
+$scope.addShop = function() {
+        $http({
+                method: "POST",
+                url:"https://static-pottery-164109.appspot.com/cheeseshops/create",
+                data: angular.toJson($scope.shopTemp)
+        }).then(function(response) {
+                $scope.shopArr.push(response.data);
+        });
+        $scope.shopTemp={City: "", Name: "", Country: "", ZipCode: "", Phone: "", State: "", Street: "", Id: ""};
+};
+
+
+$scope.addCheese = function() {
+                                $http({
+                                        method: "POST",
+                                        url:"https://static-pottery-164109.appspot.com/cheeses/create",
+                                        data: angular.toJson($scope.cheeseTemp)
+                                }).then(function(response) {
+                                        $scope.cheeseArr.push(response.data);
+                                });
+                                $scope.cheeseTemp={MakerID: "", Name: "", Id : ""};
+                }
+
+
+$scope.revTemp={Rating: 0, TastingNotes: "", Photo: "None", UserID: "", ShopID: "", PricePerPound: -1, CheeseID: "", Id: ""};
+$scope.revTemp2={Rating: 0, TastingNotes: "", Photo: "None", UserID: "", ShopID: "", PricePerPound: -1, CheeseID: "", Id: ""};
+
+
+$scope.addRev = function() {
+                                $scope.revTemp2.UserID = "ahdzfnN0YXRpYy1wb3R0ZXJ5LTE2NDEwOXIRCxIEVXNlchiAgICAgOSRCQw";
+                                $http({
+                                        method: "POST",
+                                        url:"https://static-pottery-164109.appspot.com/reviews/create",
+                                        data: angular.toJson($scope.revTemp2)
+                                }).then(function(response) {
+                                        $scope.revTemp2=response.data;
+                                        $scope.revTemp2.upd=true;
+                                        $scope.revArr.unshift($scope.revTemp2);
+                                        $scope.revTemp2={Rating: 0, TastingNotes: "", Photo: "None", UserID: "", ShopID: "", PricePerPound: -1, CheeseID: "", Id: ""};
+                                });
+                };
+
+
+$scope.edit= function(x){
+                        if(!$scope.updLock){
+                                x.upd=false;
+                                $scope.revTemp=angular.copy(x);
+                                $scope.updLock=true;
+                        }
+                };
+$scope.cancel=function(x){
+                        $scope.revTemp={Rating: -1, TastingNotes: "", Photo: "None", UserID: "", ShopID: "", PricePerPound: -1, CheeseID: "", Id: ""};
+                        $scope.updLock=false;
+                        x.upd=true;
+                };
+
+
+
+$scope.insideFunction="Outside function";
+$scope.update=function(x){
+                        var target = "https://static-pottery-164109.appspot.com/reviews/"+x.Id+"/edit";
+                        angular.copy($scope.revTemp,x);
+                        $scope.insideFunction=target;
+                        $scope.revTemp.Rating=parseInt($scope.revTemp.Rating);
+                        $scope.revTemp.PricePerPound=parseInt($scope.revTemp.PricePerPound);
+                        $http({
+                                        method: "PUT",
+                                        url:target,
+                                        data: angular.toJson($scope.revTemp)
+                        }).then(function(response) {
+                                $scope.test=response;
+                                $scope.insideFunction="Inside function";
+                        });
+                        $scope.updLock = false;
+                        x.upd = true;
+                };
+
+
+}]);
+
+app.controller("cheeseshopCtrl",['$scope','$http','$routeParams', function ($scope,$http, $routeParams) {
+$scope.msg = "Where were you when we ran";
+$scope.msg = $routeParams;
+$scope.cheeseshop={};
+$scope.test = "";
+$http({
+        method : "GET",
+        url : ("https://static-pottery-164109.appspot.com/cheeseshops/"+$scope.msg.uID)
+    }).then(function mySucces(response) {
+        $scope.cheeseshop = response.data;
+    });
+
+$scope.makerArr=[];
+$scope.shopArr=[];
+$scope.cheeseArr=[];
+$scope.userArr=[];
+$scope.revArr=[];
+$scope.makerCount=0;
+$scope.shopCount=0;
+$scope.cheeseCount=0;
+$scope.userCount=0;
+$scope.revCount=0;
+$scope.makerTemp={Name: "", Location: ""};
+$scope.shopTemp={City: "", Name: "", Country: "", ZipCode: "", Phone: "", State: "", Street: "", Id: ""};
+$scope.cheeseTemp={MakerID: "", Name: "", Id : ""};
+$scope.userTemp={DisplayName: "", Name: "", TimeCreated: "", Email: "", IsAdmin: false, Id: ""};
+
+
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/users"
+    }).then(function mySucces(response) {
+        $scope.userArr = response.data;
+    });
+
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/cheesemakers"
+    }).then(function mySucces(response) {
+        $scope.makerArr = response.data;
+    });
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/cheeseshops"
+    }).then(function mySucces(response) {
+        $scope.shopArr = response.data;
+    });
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/cheeses"
+    }).then(function mySucces(response) {
+        $scope.cheeseArr = response.data;
+    });
+
+
+
+$scope.getReviews= function() {
+$http({
+        method : "GET",
+        url : "https://static-pottery-164109.appspot.com/cheeseshops/"+$scope.msg.uID+"/reviews"
+    }).then(function (response) {
+        $scope.revArr = response.data;
+        var i;
+        var rLen = $scope.revArr.length;
+        for(i =0; i < rLen; i++){
+                $scope.revArr[i].upd= true;
+        }
+    });
+};
+$scope.getReviews();
+
+
+$scope.addMaker = function() {
+        $http({
+                method: "POST",
+                url:"https://static-pottery-164109.appspot.com/cheesemakers/create",
+                data: angular.toJson($scope.makerTemp)
+        }).then(function(response) {
+                $scope.makerArr.push(response.data);
+        });
+       $scope.makerTemp={Name: "", Location: ""};
+};
+
+          
+
+$scope.addShop = function() {
+        $http({
+                method: "POST",
+                url:"https://static-pottery-164109.appspot.com/cheeseshops/create",
+                data: angular.toJson($scope.shopTemp)
+        }).then(function(response) {
+                $scope.shopArr.push(response.data);
+        });
+        $scope.shopTemp={City: "", Name: "", Country: "", ZipCode: "", Phone: "", State: "", Street: "", Id: ""};
+};
+
+
+$scope.addCheese = function() {
+                                $http({
+                                        method: "POST",
+                                        url:"https://static-pottery-164109.appspot.com/cheeses/create",
+                                        data: angular.toJson($scope.cheeseTemp)
+                                }).then(function(response) {
+                                        $scope.cheeseArr.push(response.data);
+                                });
+                                $scope.cheeseTemp={MakerID: "", Name: "", Id : ""};
+                }
+
+
+$scope.revTemp={Rating: 0, TastingNotes: "", Photo: "None", UserID: "", ShopID: "", PricePerPound: -1, CheeseID: "", Id: ""};
+$scope.revTemp2={Rating: 0, TastingNotes: "", Photo: "None", UserID: "", ShopID: "", PricePerPound: -1, CheeseID: "", Id: ""};
+
+
+$scope.addRev = function() {
+                                $scope.revTemp2.UserID = "ahdzfnN0YXRpYy1wb3R0ZXJ5LTE2NDEwOXIRCxIEVXNlchiAgICAgOSRCQw";
+                                $http({
+                                        method: "POST",
+                                        url:"https://static-pottery-164109.appspot.com/reviews/create",
+                                        data: angular.toJson($scope.revTemp2)
+                                }).then(function(response) {
+                                        $scope.revTemp2=response.data;
+                                        $scope.revTemp2.upd=true;
+                                        $scope.revArr.unshift($scope.revTemp2);
+                                        $scope.revTemp2={Rating: 0, TastingNotes: "", Photo: "None", UserID: "", ShopID: "", PricePerPound: -1, CheeseID: "", Id: ""};
+                                });
+                };
+
+
+$scope.edit= function(x){
+                        if(!$scope.updLock){
+                                x.upd=false;
+                                $scope.revTemp=angular.copy(x);
+                                $scope.updLock=true;
+                        }
+                };
+$scope.cancel=function(x){
+                        $scope.revTemp={Rating: -1, TastingNotes: "", Photo: "None", UserID: "", ShopID: "", PricePerPound: -1, CheeseID: "", Id: ""};
+                        $scope.updLock=false;
+                        x.upd=true;
+                };
+
+
+
+$scope.insideFunction="Outside function";
+$scope.update=function(x){
+                        var target = "https://static-pottery-164109.appspot.com/reviews/"+x.Id+"/edit";
+                        angular.copy($scope.revTemp,x);
+                        $scope.insideFunction=target;
+                        $scope.revTemp.Rating=parseInt($scope.revTemp.Rating);
+                        $scope.revTemp.PricePerPound=parseInt($scope.revTemp.PricePerPound);
+                        $http({
+                                        method: "PUT",
+                                        url:target,
+                                        data: angular.toJson($scope.revTemp)
+                        }).then(function(response) {
+                                $scope.test=response;
+                                $scope.insideFunction="Inside function";
+                        });
+                        $scope.updLock = false;
+                        x.upd = true;
+                };
+
+
+}]);
+
+
+
+
+
+</script>
+
+</body>
+</html>
+
