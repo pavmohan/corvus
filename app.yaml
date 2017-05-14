@@ -1,0 +1,33 @@
+runtime: python27
+api_version: 1
+threadsafe: false
+handlers:
+- url: /test.html
+  static_files: test.html
+  upload: test.html
+
+- url: /main.html
+  static_files: main.html
+  upload: main.html
+
+- url: /userprofile.htm
+  static_files: userprofile.htm
+  upload: userprofile.htm
+
+
+- url: /cheeseprofile.htm
+  static_files: cheeseprofile.htm
+  upload: cheeseprofile.htm
+
+- url: /cheesemakerprofile.htm
+  static_files: cheesemakerprofile.htm
+  upload: cheesemakerprofile.htm
+
+- url: /cheeseshopprofile.htm
+  static_files: cheeseshopprofile.htm
+  upload: cheeseshopprofile.htm
+
+
+
+- url: /.*
+  script: helloworld.application
