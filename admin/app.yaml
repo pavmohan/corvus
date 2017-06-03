@@ -9,13 +9,10 @@ handlers:
 - url: /assets
   static_dir: assets
 
-- url: /.*
-  script: main.app
+- url: /scripts
+  static_dir: scripts
 
-# [START libraries]
-libraries:
-- name: webapp2
-  version: latest
-- name: jinja2
-  version: latest
-# [END libraries]
+- url: /(.+)
+  mime_type: text/html
+  static_files: static/\1.html
+  upload: static/(.+)

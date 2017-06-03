@@ -2,6 +2,20 @@ runtime: python27
 api_version: 1
 threadsafe: false
 handlers:
+- url: /admin/dist
+  static_dir: admin/dist
+
+- url: /admin/assets
+  static_dir: admin/assets
+
+- url: /admin/scripts
+  static_dir: admin/scripts
+
+- url: /admin/(.+)
+  mime_type: text/html
+  static_files: admin/static/\1.html
+  upload: admin/static/(.+)
+  
 - url: /test.html
   static_files: test.html
   upload: test.html
