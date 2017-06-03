@@ -1,0 +1,82 @@
+
+{{msg}}
+<div id="profile" class="box">
+        <h1> {{cheese.Name}}</h1>
+        <p> Made by {{cheese.MakerName}}<p>
+</div>
+<div class="box">
+<h3>Cheesemaker Form </h3>
+<form>
+Maker Name<input type="text" ng-model="makerTemp.Name"><br><br>
+Maker Location<input type="text" ng-model="makerTemp.Location"><br><br>
+<button ng-click="addMaker()">Add maker </button>
+</form>
+</div>
+
+<div class="box">
+<h3>Cheeseshop </h3>
+<form>
+Shop Name<input type="text" ng-model="shopTemp.Name"><br><br>
+Shop Street<input type="text" ng-model="shopTemp.Street"><br><br>
+Shop Zip Code<input type="text" ng-model="shopTemp.ZipCode"><br><br>
+Shop City<input type="text" ng-model="shopTemp.City"><br><br>
+Shop State<input type="text" ng-model="shopTemp.State"><br><br>
+Shop Country<input type="text" ng-model="shopTemp.Country"><br><br>
+Shop Phone<input type="text" ng-model="shopTemp.Phone"><br><br>
+<button ng-click="addShop()">Add Shop </button>
+</form>
+</div>
+
+<div class="box">
+<h3>Cheese </h3>
+<form>
+Cheese Name<input type="text" ng-model="cheeseTemp.Name"><br><br>
+Maker Name<select ng-model="cheeseTemp.MakerID">
+        <option ng-repeat="x in makerArr" value="{{x.Id}}">{{x.Name}} </option>
+</select>
+<br><br>
+<button ng-click="addCheese()">Add Cheese </button>
+</form>
+</div>
+
+
+
+<div class="box">
+<h3>Reviews </h3>
+<form>
+Cheese Name<select ng-model="revTemp2.CheeseID">
+        <option ng-repeat="x in cheeseArr" value="{{x.Id}}">{{x.Name}} </option>
+</select>
+<br><br>
+Shop Name<select ng-model="revTemp2.ShopID">
+        <option ng-repeat="x in shopArr" value="{{x.Id}}">{{x.Name}} </option>
+</select>
+<br><br>
+Tasting Notes<input type="text" ng-model="revTemp2.TastingNotes"><br><br>
+Rating<input type="number" ng-model="revTemp2.Rating"><br><br>
+Price<input type="number" ng-model="revTemp2.PricePerPound"><br><br>
+Photo<input type="text" ng-model="revTemp2.Photo"><br><br>
+<button ng-click="addRev()">Add Review </button>
+</form>
+</div>
+
+
+<div ng-repeat="x in revArr">
+<div class="box" ng-show="x.upd">
+	<h3><a href="#/userprofile/{{x.UserID}}">{{x.UserName}}</a> enjoyed some <a href="#/cheeseprofile/{{x.CheeseID}}">{{x.CheeseName}}</a> from <a href="#/chee
+seshopprofile/{{x.ShopID}}">{{x.ShopName}}</a> </h3>
+        
+        <p>Rating {{x.Rating}}</p>
+        <p>Tasting Note: {{x.TastingNotes}}</p>
+        <p>Price per pound: ${{x.PricePerPound}}</p>
+        <button ng-click="edit(x)"> Edit </button> <br>
+</div>
+<div class="box" ng-hide="x.upd">
+        <p>Rating:<input type="text" ng-model="revTemp.Rating"> </p>
+        <p>Tasting Notes: <input type="text" ng-model="revTemp.TastingNotes"> </p>
+        <p>Price Per Pound: <input type="text" ng-model="revTemp.PricePerPound"></p>
+        <button ng-click="update(x)"> Update </button> <button ng-click="cancel(x)"> Cancel </button><br>
+</div>
+</div>
+<br><br>
+
