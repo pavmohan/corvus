@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-animate.js"></script>
+  <style>
+        #leftPanel{
+        }
+    body{
+      background-color: ghostwhite;
+    }
+    #defaultImage{
+        opacity: 0.4;
+    }
+    button {
+        height:45px;
+        width:160px;
+        background-color: #968A8A;
+    }
+    .cBtn {
+        width: 250px;
+    }
+    .userprofile-sidebar{
+        background-color: #f1f1f1;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transition: 0.3s;
+        padding-bottom: 30px;
+
+ }
+    .userprofile-usertitle{
+        text-align: center;
+    }
+    #rightBody{
+        height:1000px;
+        background-color: ghostwhite;
+    }
+    #addReview{
+        height:600px;
+        background-color:#E1E1E2;
+        color: #4C3F54;
+    }
+    .gutter{
+        //background-color:yellow;
+    }
+
+.addRevNav{
+        height:100px;
+        background-color:#968A8A;
+        padding-top: 35px;
+    }
+    .displayReview{
+        height:500px;
+        background-color:#f1f1f1;
+        color: #4C3F54;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transition: 0.3s;
+        margin-bottom: 30px;
+    }
+    .reviewTitle{
+        color: #333333;
+                font-family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;
+                font-style: italic;
+                font-size: 2em;
+                text-align: right;
+        margin-top:20px;
+                padding-left: 50px;
+    }
+    .frontRevPic{
+        padding-top: 0px;
+        margin-top: 0px;
+        margin-left: 0px;
+        margin-bottom:0px;
+    }
+
+
+
+.revHalf{
+        height:500px;
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transition: 0.3s;
+}
+#revLeft{
+        background-color:#E1E1E2;
+    color: #4C3F54;
+}
+#revRight{
+        background-color:#E1E1E2;
+    color: #4C3F54;
+}
+#cheeseLeft{
+        background-color: #4C3F54;
+    color: #BDC3DB;
+}
+#cheeseRight{
+        background-color: #4C3F54;
+    color: #BDC3DB;
+}
+#shopLeft{
+        background-color:#BDC3DB;
+        color: #4C3F54;
+    padding-top:10px;
+}
+
+
+#shopRight{
+        background-color:#BDC3DB;
+    color: #4C3F54;
+}
+#ddList {
+        position: absolute;
+        display: block;
+    background-color: #f1f1f1;
+        border-style: solid;
+    border-width: 1px;
+    border-color: grey;
+    width: 210px;
+    margin-top: 0px;
+    padding-left: 0px;
+    z-index: 1;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    font-size: 1.5em;
+    color: #4D4B58;
+    font-family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;
+    cursor: pointer;
+}
+
+
+
+#mdList {
+        position: absolute;
+        display: block;
+    background-color: #f1f1f1;
+        border-style: solid;
+    border-width: 1px;
+    border-color: grey;
+    width: 210px;
+    margin-top: 0px;
+    padding-left: 0px;
+    z-index: 1;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    font-size: 1.5em;
+    color: #4D4B58;
+    font-family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;
+    cursor: pointer;
+}
+ input{
+        color: #E1E1E2;
+                border-top-style: none;
+        border-right-style: none;
+                border-bottom-style: solid;
+                border-left-style: none;
+        border-width: 1px 1px 5px 1px;
+        border-color: #694489;
+        background-color: #968A8A;
+        text-align: center;
+        font-family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;
+                font-style: italic;
+        font-size: 1.5em;
+        }
+
+.sInput{
+        border-color: #838EDE;
+}
+    input::placeholder{
+        font-size: 1.5em;
+        color: #694489;
+        font-family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;
+                font-style: italic;
+        font-weight: bold;
+    }
+.sInput::placeholder{
+        color: #838EDE;
+}
+.reviewInput:focus{
+        border-style:None;
+    border-bottom-style:solid;
+}
+
+
+.revPic{
+        display: inline-block;
+        padding-top:50px;
+}
+.revBody{
+        display: inline-block;
+    //margin-left: 20px;
+    padding-top: 50px;
+}
+.selectable{
+        list-style-type: None;
+}
+#addShopBtn{
+        margin-left: 150px;
+}
+  </style>
+</head>
+
+<body>
+<div ng-app="myApp" ng-controller="myCtrl" ng-click="outClick()">
+<div id="coverpage" class="jumbotron">
+    <img src="https://static.pexels.com/photos/309269/pexels-photo-309269.jpeg" style="width:100%;height:450px">
+</div>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">Corvus</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Dashboard</a></li>
+        <li><a href="#">Edit Profile</a></li>
+        <li><a href="#">List of Shops</a></li>
+        <li><a href="#">List of Makers</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+        <div id="leftPanel" class="col-sm-3">
+        <div class="userprofile-sidebar">
+                <div class="userprofile-userpic">
+                        <img src="http://simpleicon.com/wp-content/uploads/user1.png" class="img-responsive" alt="">
+            </div>
+            <div class="userprofile-usertitle">
+                <div class="profile-usertitle-name">
+                        <h2>{{user.display_name}} </h2>
+                </div>
+                <div class="profile-usertitle-location">
+                    {{user.name}}
+                    {{user.time_created}}
+                </div>
+            </div>
+       </div>
+      <br>
+    </div>
+    <div id="rightBody" class="col-sm-9">
+        <div class="row">
+                <div class="col-sm-1 gutter">
+            </div>
+            <div id="addReviews" class="col-sm-10">
+                <div class="row">
+                        <div id="addCheese" class="col-sm-4 addRevNav" ng-click=" $event.stopPropagation();">
+                        <input class="reviewInput"  type="text" placeholder="{Cheese}" ng-model="test" ng-focus="addRevForm.state = 1; addRevForm.cDD = true; $event.sto
+pPropagation();">
+                                                <div id="ddList" ng-show="addRevForm.cDD">
+                                                        <ul  class="nav nav-pills nav-stacked">
+                                                                <li ng-repeat="x in cheeseArr | filter:{name: test } | limitTo:5">
+                                                                        <a ng-click="inClick(x)"> {{ x.name }} </a>
+                                                                </li>
+                                                                <li>
+									<a ng-click="inClick(-1)"> Enter new cheese </a>
+                                                                </li>
+                                                        </ul>
+                                                </div>
+                    </div>
+
+
+<div id="addRevDetails" class="col-sm-4 addRevNav">
+                        AT
+                    </div>
+                    <div id="addShop" class="col-sm-4 addRevNav" ng-click=" $event.stopPropagation();">
+                        <input class="reviewInput sInput"  type="text" placeholder="{CheeseShop}" ng-model="shoptest" ng-focus="addRevForm.state = 2; addRevForm.mDD = t
+rue; $event.stopPropagation();">
+                                                <div id="mdList" ng-show="addRevForm.mDD">
+                                                        <ul  class="nav nav-pills nav-stacked">
+                                                                <li ng-repeat="x in shopArr | filter:{name: shoptest } | limitTo:5">
+                                                                        <a ng-click="sinClick(x)"> {{ x.name }} </a>
+                                                                </li>
+                                                                <li>
+                                                                        <a ng-click="sinClick(-1)"> Enter new Cheeseshop </a>
+                                                                </li>
+                                                        </ul>
+                                                </div>
+                    </div>
+                </div>
+
+
+                        <form name="reviewDetails">
+                <div class="row" ng-show="addRevForm.state==0 && addRevForm.cID != '' &&  addRevForm.sID != ''">
+                   <div id="revLeft" class="col-sm-6 revHalf">
+                        <br>
+                        {{happy}}
+                        <p>Tasting Notes</p>
+                        <input name="notes" type="text" ng-model="revTemp2.tasting_notes">                                                      <br><br>
+                        <p>Rating</p>
+                                                <input name="ratingInput" type="number" min="1" max="5" ng-model="revTemp2.rating"><br>
+                                                <h6 class="error" ng-show="reviewDetails.ratingInput.$error.min">
+                                                I get it. The cheese was bad. But the rating can't be less than 1.</h6>
+                                                <h6 class="error" ng-show="reviewDetails.ratingInput.$error.max">
+                                                That must be amazing cheese. But the rating can't be more than 5.</h6>
+                                                <br>
+                                                <p>Price</p>
+                        <input type="number" name="priceInput" min="0" ng-model="revTemp2.price_per_pound"><br><br>
+                                                <h6 class="error" ng-show="reviewDetails.priceInput.$error.min">
+                                                There's no free lunch. Price must be a positive value.</h6>
+                                                <br>
+                                                <p>Photo</p>
+                        <input type="url" name="photoInput" placeholder="None" ng-model="revTemp2.photo"><br>
+                                <h6 class="error" ng-show="reviewDetails.photoInput.$error.url">
+                                                Oops. We can't find the picture. Check if url is valid.</h6>
+                                                <br>
+                        <br>
+                    </div>
+                    <div id="revRight" class="col-sm-6 revHalf">
+                        <br><br>
+                        <img ng-hide="reviewDetails.photoInput.$error.url || revTemp2.photo==''" src="{{revTemp2.photo}}" style="width:304px;height:250px;">
+                                <img id="defaultImage"  ng-show="revTemp2.photo=='' || reviewDetails.photoInput.$error.url" src="https://static.pexels.com/photos/375760
+/pexels-photo-375760.jpeg" style="width:304px;height:250px;">
+
+
+                        <h4>Rating: {{revTemp2.rating}} Price: {{revTemp2.price_per_pound}} </h4>
+                        <h4>Tasting Notes</h4>
+                        <p> {{revTemp2.tasting_notes}}</p>
+                        <button ng-disabled="!reviewDetails.$valid" ng-click="addRev()">Add Review </button>
+                    </div>
+                </div>
+                        </form>
+
+
+
+                <div class="row" ng-show="addRevForm.state==1">
+                        <div id="cheeseLeft" class="col-sm-6 revHalf">
+                        <h3>Cheese </h3>
+                        <form name="cheeseDetails">
+                                                        Cheese Name<br><input name="nameInput" ng-maxlength="21" type="text" ng-model="cheeseTemp.name" ng-disabled="add
+RevForm.existingCheese"><br>
+                                                <h6 class="error" ng-show="cheeseDetails.nameInput.$error.maxlength">
+                                                Suprised that name fit on the menu. Keep it less than 20 characters</h6>
+<br>
+                                                        Maker Name<br><select ng-model="cheeseTemp.maker_id" ng-disabled="addRevForm.existingCheese">
+                                                <option ng-repeat="x in makerArr" value="{{x.id}}">{{x.name}} </option>
+                            <option value="-1">Tell us about a new maker </option>
+                                                        </select><br>
+                            <button ng-disabled="!cheeseDetails.$valid" ng-hide="addRevForm.existingCheese" ng-click="storeCheese()">Add Cheese </button>
+                            <br><br>
+                            <div ng-show="addRevForm.newMaker">
+                                <h6> Help Us Get To Know Them Better </h6>
+                                                                Maker Name<input name="makerInput" ng-maxlength="40" type="text" ng-model="makerTemp.name"><br>
+                                                                        <h6 class="error" ng-show="cheeseDetails.makerInput.$error.maxlength">
+                                                That actually fit on the sign? Keep it less than 40 characters</h6>
+                                                                <br>
+                                                                Maker Location<input name="locationInput" ng-maxlength="40" type="text" ng-model="makerTemp.location"><b
+r><h6 class="error" ng-show="cheeseDetails.locationInput.$error.maxlength">
+                                                That actually fit on the sign? Keep it less than 40 characters</h6>                                                     
+ 
+                                <br><button ng-disabled="!cheeseDetails.$valid" ng-click="storeMaker()">Add maker </button>
+                                                        </div>
+                                                </form>
+                    </div>
+		<div id="cheeseRight" class="col-sm-6 revHalf">
+                        <h2>{{cheeseTemp.name}}</h2>
+                        <h4>{{cheeseTemp.maker_name}}</h4>
+                        <h4>{{makerTemp.name}}</h4>
+                        <br> <br>
+                        <button class="cBtn" ng-show="addRevForm.transition" ng-click="transitionClick()"> Cheese Complete. Tell me about the Shop </button>
+                    </div>
+                </div>
+
+
+<form name="shopDetails">
+                <div class="row" ng-show="addRevForm.state==2">
+                        <div id="shopLeft" class="col-sm-6 revHalf">
+                                                        <input class="sInput" name="nameInput" ng-maxlength="20" type="text" ng-model="shopTemp.name" ng-disabled="addRe
+vForm.existingShop">
+                                                        <br><h6 class="error" ng-show="shopDetails.nameInput.$error.maxlength">
+                                                        Sorry Charlie. Address entries are limited to 20 characters</h6>
+                                                        <p> Shop Name</p>
+                            <input class="sInput" type="text" name="streetInput" ng-maxlength="20" pattern="[ .a-zA-Z0-9-]+" ng-model="shopTemp.street" ng-disabled="add
+RevForm.existingShop">                                                  <br>
+                                                        <h6 class="error" ng-show="shopDetails.streetInput.$error.maxlength">
+                                                        Sorry Charlie. Address entries are limited to 20 characters</h6>
+                                                        <h6 class="error" ng-show="shopDetails.streetInput.$error.pattern">
+                                                        Street address invalid</h6>
+                                                        <p> Shop Street</p>
+                            <input class="sInput" name="cityInput" ng-maxlength="20" pattern="[ .a-zA-Z-]+" type="text" ng-model="shopTemp.city" ng-disabled="addRevForm
+.existingShop"><br>
+                                                        <h6 class="error" ng-show="shopDetails.cityInput.$error.maxlength">
+                                                        Sorry Charlie. Address entries are limited to 20 characters</h6>
+                                                        <h6 class="error" ng-show="shopDetails.cityInput.$error.pattern">
+                                                        Invalid characters in city name</h6>
+                                                        <p> Shop City</p>
+                            <input class="sInput" type="text" name="stateInput" pattern="[a-zA-Z][a-zA-Z]" ng-model="shopTemp.state" ng-disabled="addRevForm.existingSho
+p">                                                                                             <br>
+                                                        <h6 class="error" ng-show="shopDetails.stateInput.$error.pattern">
+                                                        Use the two letter state abbreviation</h6>
+                                                        <p> Shop State</p>
+                            <input class="sInput" type="text" name="zipcodeInput" pattern="[0-9][0-9][0-9][0-9][0-9]" ng-model="shopTemp.zipcode" ng-disabled="addRevFor
+m.existingShop"><br>
+                                                        <h6 class="error" ng-show="shopDetails.zipcodeInput.$error.pattern">
+                                                        Invalid zip code</h6>
+                                                        <p> Shop Zip Code</p>
+                            <input class="sInput" type="text" name="countryInput" ng-maxlength="20" pattern="[ .a-zA-Z-]+"  ng-model="shopTemp.country" ng-disabled="add
+RevForm.existingShop"><br>
+
+ <h6 class="error" ng-show="shopDetails.countryInput.$error.maxlength">
+                                                        Sorry Charlie. Address entries are limited to 20 characters</h6>
+                                                        <h6 class="error" ng-show="shopDetails.countryInput.$error.pattern">
+                                                        Country invalid</h6>
+                                                        <p> Shop Country</p>
+                            <input class="sInput" name="phoneInput" ng-maxlength="20" pattern="[ ()0-9-]+" type="text" ng-model="shopTemp.phone" ng-disabled="addRevForm
+.existingShop">
+                        <br><h6 class="error" ng-show="shopDetails.phoneInput.$error.maxlength">
+                                                        Sorry Charlie. Phone entries are limited to 20 characters</h6>
+                                                        <h6 class="error" ng-show="shopDetails.phoneInput.$error.pattern">
+                                                        Invalid characters in phone number</h6>
+                        <p>     Shop Phone
+                            </p>
+                    </div>
+                    <div id="shopRight" class="col-sm-6 revHalf">
+                        <h2>{{shopTemp.name}}  {{shopTemp.country}}</h2>
+                        <h4>{{shopTemp.street}}</h4>
+                        <h4>{{shopTemp.city}}   {{shopTemp.state}} {{shopTemp.zipcode}}</h4>
+                        <h4>{{shopTemp.phone}}</h4>
+                        <br>
+                        <button ng-disabled="!shopDetails.$valid" ng-hide="addRevForm.existingShop" id="addShopBtn" ng-click="addShop()"> Add Shop </button>
+                        <button class="cBtn" ng-show="addRevForm.transition" ng-click="transitionClickShop()"> Shop Complete. Tell me about the experience </button>
+                    </div>
+                </div>
+                </form>
+                <br><br><br>
+            </div>
+	<div class="col-sm-1 gutter">
+            </div>
+        </div>
+        <br><br><br>
+        <div class="row" ng-repeat="x in revArr">
+                <div class="col-sm-2 gutter">
+            </div>
+            <div class="col-sm-9 displayReview" ng-show="x.upd">
+                <div class="reviewTitle">
+                        <a href="{{baseUrl+'/cheeseprofile/'+x.cheese_id}}"> <b> {{x.cheese_name}}</b> </a> at the <a href="{{baseUrl+'/cheeseshopprofile/'+x.cheeseshop
+_id}}"> <b>{{x.cheeseshop_name}}</b></a>
+                </div>
+                <div class="revPic">
+                        <img class="frontRevPic" src="{{x.photo}}" style="width:304px;height:300px;">
+                </div>
+                 <div class="revBody">
+                        <p><b>Rating:</b> {{x.rating}}</p>
+                                <p><b>Tasting Note:</b> {{x.tasting_notes}}</p>
+                                <p><b>Price per pound:</b> ${{x.price_per_pound}}</p>
+                                <button ng-show="showEdit(x)" ng-click="edit(x)"> Edit </button> <br>
+                 </div>
+            </div>
+            <div class="col-sm-9 displayReview" ng-hide="x.upd">
+                <div class="reviewTitle">
+                        <b> {{x.cheese_name}}</b> at the <b>{{x.cheeseshop_name}}</b>
+                </div>
+                <div class="revPic">
+                        <img class="frontRevPic" src="{{x.photo}}" style="width:304px;height:250px;">
+                </div>
+                 <div class="revBody">
+                         <p>Rating:<input type="text" ng-model="revTemp.rating"> </p>
+                         <p>Tasting Notes: <input type="text" ng-model="revTemp.tasting_notes"> </p>
+                         <p>Price Per Pound: <input type="text" ng-model="revTemp.price_per_pound"></p>
+                         <button ng-click="update(x)"> Update </button> <button ng-click="cancel(x)"> Cancel </button><br>
+                 </div>
+
+ 		</div>
+            <div class="col-sm-1 gutter">
+            </div>
+        </div>
+        <br><br><br>
+    </div>
+</div>
+</div>
+
+<script>
+        var app = angular.module('myApp', []);
+    app.controller("myCtrl", function($scope,$http, $location) {
+        $scope.profile_type= "users";
+        $scope.baseUrl = "https://static-pottery-164109.appspot.com";
+        $scope.myUrl = $location.absUrl();
+        $scope.profile_id =  $scope.myUrl.split("/").pop();
+        $scope.current_user_admin = false;
+        $scope.current_user_id = "ahdzfnN0YXRpYy1wb3R0ZXJ5LTE2NDEwOXIRCxIEVXNlchiAgICAgOSRCQw";
+        $scope.updLock=false;
+        $scope.happy = "test";
+        $scope.shoptest="";
+        $scope.user = {name:"WUggle", display_name: "Hi Man", time_created: "Now"};
+        $scope.addRevForm = {};
+        $scope.addRevForm.cID = "";
+        $scope.addRevForm.sID = "";
+        $scope.addRevForm.state = 0;
+        $scope.addRevForm.transition = false;
+        $scope.addRevForm.newCheese = false;
+        $scope.addRevForm.existingCheese = false;
+        $scope.addRevForm.newShop = false;
+        $scope.addRevForm.existingShop = false;
+        $scope.addRevForm.newMaker = false;
+        $scope.addRevForm.cDD = false;
+        $scope.addRevForm.cL=false;
+        $scope.addRevForm.cI=false;
+        $scope.addRevForm.mDD = false;
+        $scope.addRevForm.mL=false;
+        $scope.addRevForm.mI=false;
+
+
+$scope.makerArr=[];
+$scope.shopArr=[];
+$scope.cheeseArr=[];
+$scope.userArr=[];
+$scope.revArr=[];
+                $scope.outClick = function() {
+                                                        if($scope.addRevForm.cDD) {
+                                                                $scope.addRevForm.cDD = !$scope.addRevForm.cDD;
+                                }
+                                if($scope.addRevForm.mDD) {
+                                                                $scope.addRevForm.mDD = !$scope.addRevForm.mDD;
+                                }
+                                                };
+        $scope.createMaker=function() {
+                                                        $scope.addRevForm.newMaker = true;
+                                                        return "";
+                                                };
+
+
+
+
+$scope.makerCount=0;
+$scope.shopCount=0;
+$scope.cheeseCount=0;
+$scope.userCount=0;
+$scope.revCount=0;
+$scope.makerTemp={name: "", location: ""};
+$scope.shopTemp={city: "", name: "", country: "", zipcode: "", phone: "", state: "", street: "", id: ""};
+$scope.cheeseTemp={maker_id: "", name: "", id : ""};
+$scope.userTemp={display_name: "", name: "", time_created: "", email: "", is_admin: false, id: ""};
+$scope.revTemp={rating: 3, tasting_notes: "", photo: "", user_id: "", cheeseshop_id: "", price_per_pound: 0, cheese_id: "", id: ""};
+$scope.revTemp2={rating: 3, tasting_notes: "", photo: "", user_id: "", cheeseshop_id: "", price_per_pound: 0, cheese_id: "", id: ""};
+
+
+
+$http({
+        method : "GET",
+        url : $scope.baseUrl+"/users/"+ $scope.profile_id
+    }).then(function (response) {
+        $scope.user = response.data;
+    }, function myError(response) {
+        $scope.user.Name = response.statusText;
+        $scope.user.DisplayName = "Bad";
+        $scope.user.TimeCreated = "Crazy time";
+    });
+$http({
+        method : "GET",
+        url : $scope.baseUrl+"/cheesemakers"
+    }).then(function mySucces(response) {
+        $scope.makerArr = response.data;
+    });
+$http({
+        method : "GET",
+        url : $scope.baseUrl+"/cheeseshops"
+    }).then(function mySucces(response) {
+        $scope.shopArr = response.data;
+    });
+
+
+$http({
+        method : "GET",
+        url : $scope.baseUrl+"/cheeses"
+    }).then(function mySucces(response) {
+        var i = 0;
+        for(i=0; i < response.data.length; i++) {
+                $scope.cheeseArr[i] = response.data[i].cheese;
+                $scope.cheeseArr[i].maker_id = response.data[i].cheesemaker.id;
+                $scope.cheeseArr[i].maker_name = response.data[i].cheesemaker.name;
+        }
+    });
+$scope.getReviews= function() {
+$http({
+        method : "GET",
+        url : $scope.baseUrl+"/"+$scope.profile_type+"/"+$scope.profile_id+"/reviews"
+    }).then(function (response) {
+        $scope.revArr = response.data;
+        var i;
+        var rLen = $scope.revArr.length;
+        for(i =0; i < rLen; i++){
+                $scope.revArr[i].upd= true;
+        }
+    });
+};
+
+
+$scope.getReviews();
+$scope.addMaker = function() {
+        $http({
+                method: "POST",
+                url:$scope.baseUrl+"/cheesemakers/create",
+                data: angular.toJson($scope.makerTemp)
+        }).then(function(response) {
+                $scope.makerArr.push(response.data);
+                $scope.makerTemp.id = response.data.id;
+                $scope.cheeseTemp.maker_id = response.data.id;
+                $scope.addCheese();
+        });
+       //$scope.makerTemp={Name: "", Location: ""};
+};
+$scope.addShop = function() {
+        $http({
+                method: "POST",
+                url: $scope.baseUrl+"/cheeseshops/create",
+                data: angular.toJson($scope.shopTemp)
+        }).then(function(response) {
+                $scope.shopArr.push(response.data);
+                $scope.happy = response.data;
+                $scope.addRevForm.sID = response.data.id;
+                $scope.addRevForm.transition = true;
+                $scope.addRevForm.existingShop = true;
+                $scope.shopTemp.id = $scope.addRevForm.sID;
+                $scope.shoptest = $scope.shopTemp.name;
+        });
+
+ //$scope.shopTemp={City: "", Name: "", Country: "", ZipCode: "", Phone: "", State: "", Street: "", Id: ""};
+};
+$scope.addCheese = function() {
+                                $http({
+                                        method: "POST",
+                                        url: $scope.baseUrl+"/cheeses/create",
+                                        data: angular.toJson($scope.cheeseTemp)
+                                }).then(function(response) {
+                                        $scope.cheeseArr.push(response.data);
+                                        $scope.test = response.data.name;
+                                        $scope.addRevForm.cID =response.data.id;
+                                        $scope.cheeseTemp.id = response.data.id;
+                                        $scope.addRevForm.transition = true;
+                                });
+                                //$scope.cheeseTemp={MakerID: "", Name: "", Id : ""};
+                }
+
+
+
+$scope.addRev = function() {
+                                $scope.revTemp2.user_id = $scope.user.id;
+                                $scope.revTemp2.cheese_id = $scope.addRevForm.cID;
+                                $scope.revTemp2.cheeseshop_id = $scope.addRevForm.sID;
+                                $scope.happy = "Before HTTP call";
+                                $http({
+                                        method: "POST",
+                                        url: $scope.baseUrl+"/reviews/create",
+                                        data: angular.toJson($scope.revTemp2)
+                                }).then(function(response) {
+                                        $scope.revTemp2=response.data;
+                                        $scope.happy = response;
+                                        $scope.revTemp2.upd=true;
+                                        $scope.revArr.unshift($scope.revTemp2);
+                                        $scope.revTemp2={rating: 3, tasting_notes: "", photo: "", user_id: "", cheeseshop_id: "", price_per_pound: 0, cheese_id: "", id:
+ ""};
+                                        $scope.addRevForm.cID = "";
+                                        $scope.addRevForm.sID= "";
+                                        $scope.test = "";
+                                        $scope.shoptest="";
+                                        $scope.addRevForm.transition=false;
+                                });
+                };
+
+
+
+
+$scope.inClick = function(x) {
+                                                        if(x==-1) {
+                                        $scope.test = "Tell us about the cheese";
+                                    $scope.addRevForm.existingCheese = false;
+                                        $scope.addRevForm.cDD = false;
+                                    $scope.cheeseTemp={maker_id: "", name: "", id : ""};
+                                    return;
+                                }
+                                $scope.addRevForm.existingCheese = true;
+                                                        $scope.cheeseTemp = angular.copy(x);
+                                $scope.test = x.name;
+                                $scope.addRevForm.cDD = false;
+                                $scope.finishCheese();
+                                                };
+$scope.sinClick = function(x) {
+                                                        if(x==-1) {
+                                        $scope.shoptest = "Tell us about the shop";
+                                    $scope.addRevForm.existingShop = false;
+                                        $scope.addRevForm.mDD = false;
+                                    $scope.shopTemp={city: "", name: "", country: "", zipcode: "", phone: "", state: "", street: "", id: ""};
+                                    $scope.addRevForm.transition = false;
+                                    return;
+                                }
+                                $scope.addRevForm.existingShop = true;
+                                                        $scope.shopTemp = angular.copy(x);
+                                $scope.shoptest = x.name;
+                                $scope.addRevForm.mDD = false;
+                                $scope.addRevForm.transition = true;
+                                                };
+
+
+
+                $scope.storeCheese=function(){
+                        if($scope.cheeseTemp.maker_id == "-1"){
+                                $scope.addRevForm.newMaker = true;
+                                $scope.happy="success";
+                            } else {
+                                $scope.happy="fail";
+                                $scope.addCheese();
+                                $scope.finishCheese();
+                            }
+                }
+        $scope.storeMaker=function(){
+                                $scope.addRevForm.newMaker = false;
+                                $scope.addMaker();
+                                $scope.finishCheese();
+                }
+
+
+        $scope.finishCheese = function() {
+                                                        $scope.happy = "funny story";
+                                                        $scope.addRevForm.cID =  $scope.cheeseTemp.id;
+                                                        $scope.test=$scope.cheeseTemp.name;
+                                $scope.addRevForm.transition = true;
+                                $scope.happy = "sad story";
+                                                }
+         $scope.transitionClick = function() {
+                                                                $scope.cheeseTemp={maker_id: "", name: "", id : ""};
+                                $scope.makerTemp={name: "", location: ""};
+                                $scope.addRevForm.transition=false;
+                                $scope.addRevForm.state=0;
+                                                        }
+         $scope.transitionClickShop = function() {
+                                                        $scope.addRevForm.sID= $scope.shopTemp.id;
+                                                                $scope.shopTemp={city: "", name: "", country: "", zipcode: "", phone: "", state: "", street: "", id: ""}
+;
+                                $scope.addRevForm.transition=false;
+                                $scope.addRevForm.state=0;
+                                                        }
+
+
+
+$scope.edit= function(x){
+                        if(!$scope.updLock){
+                                x.upd=false;
+                                $scope.revTemp=angular.copy(x);
+                                $scope.updLock=true;
+                        }
+                };
+$scope.showEdit = function(x) {
+                        if(x.user_id == $scope.current_user_id || $scope.current_user_admin) {
+                                return true;
+                        }
+                        return false;
+                };
+$scope.cancel=function(x){
+                        $scope.revTemp={rating: 3, tasting_notes: "", photo: "", user_id: "", cheeseshop_id: "", price_per_pound: 0, cheese_id: "", id: ""};
+                        $scope.updLock=false;
+                        x.upd=true;
+                };
+
+
+$scope.update=function(x){
+                        var target = $scope.baseUrl+"/reviews/"+x.id+"/edit";
+                        angular.copy($scope.revTemp,x);
+                        $scope.insideFunction=target;
+                        $scope.revTemp.rating=parseInt($scope.revTemp.rating);
+                        $scope.revTemp.price_per_pound=parseInt($scope.revTemp.price_per_pound);
+                        $http({
+                                        method: "PUT",
+                                        url:target,
+                                        data: angular.toJson($scope.revTemp)
+                        }).then(function(response) {
+                                $scope.test=response;
+                                $scope.insideFunction="Inside function";
+                        });
+                        $scope.updLock = false;
+                        x.upd = true;
+                };
+    });
+</script>
+</body>
+</html>
+           
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

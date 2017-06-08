@@ -1,0 +1,15 @@
+- url: /userprofile/.*
+  static_files: userprofile.html
+  upload: userprofile.html
+
+- url: /cheeseprofile/.*
+  static_files: cheeseprofile.html
+  upload: cheeseprofile.html
+
+- url: /cheesemakerprofile/.*
+  static_files: cheesemakerprofile.html
+  upload: cheesemakerprofile.html
+
+- url: /cheeseshopprofile/.*
+  static_files: cheeseshopprofile.html
+  upload: cheeseshopprofile.html
