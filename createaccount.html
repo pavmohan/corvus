@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+<style>
+
+body{
+      background-color: ghostwhite;
+    }
+
+button {
+        height:45px;
+        width:160px;
+        background-color: #968A8A;
+    }
+
+ input{
+        color: #E1E1E2;
+                border-top-style: none;
+        border-right-style: none;
+                border-bottom-style: solid;
+                border-left-style: none;
+        border-width: 1px 1px 5px 1px;
+        border-color: #694489;
+        background-color: #968A8A;
+        text-align: center;
+        font-family: ‘Palatino Linotype’, ‘Book Antiqua’, Palatino, serif;
+                font-style: italic;
+        font-size: 1.5em;
+        }
+
+
+
+
+
+form {
+	
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        text-align: center;
+        width:40%;
+        height: 600px;
+        margin: auto;
+        border-style: groove;
+        background-color:ghostwhite;
+        margin-top:140px;
+	padding-top: 100px;
+
+}
+</style>
+
+<body>
+
+<div ng-app="myApp" ng-controller="myCtrl"> 
+
+<p>Please enter your information</p>
+
+<form name="cAct">
+Name: <input name="name" ng-model="userTemp.name" type="text" ng-minlength="1" ng-maxlength="20" pattern="[ .a-zA-z-]+">
+               <br> <h6 class="error" ng-show="cAct.name.$error.maxlength"> Names limited to 20 characters</h6>
+                <h6 class="error" ng-show="cAct.name.$error.minlength"> Names must have at least 1 characters</h6>
+                <h6 class="error" ng-show="cAct.name.$error.pattern"> Names can only contain periods, spaces, hypens and alphabetic characters</h6>
+               <br>Display Name: <input name="display_name" ng-model="userTemp.display_name" type="text" ng-minlength="6" ng-maxlength="20" pattern="[ .a-zA-z-]+">
+               <br> <h6 class="error" ng-show="cAct.display_name.$error.maxlength"> Display names limited to 20 characters</h6>
+                <h6 class="error" ng-show="cAct.display_name.$error.minlength"> Display names must have 6 characters</h6>
+                <h6 class="error" ng-show="cAct.display_name.$error.pattern"> Display names can only contain periods, spaces, hypens and alphabetic characters</h6>
+               <br>Email: <input name="email" ng-model="userTemp.email" type="text" ng-minlength="10" ng-maxlength="40" >
+                             <br> <button  ng-disabled="{{!cAct.$valid}}" ng-click="createAccount()">Create Account </button>
+		
+
+</form>
+
+</div>
+
+
+
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http) {
+$scope.sample="Button Not Clicked";
+ $scope.baseUrl = "https://static-pottery-164109.appspot.com";
+ $scope.userTemp = {name:"", display_name:"",email:"", is_admin:false, time_created : "None"};
+ 
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+
+
+$scope.createAccount = function() {
+					$scope.sample="Button Clicked";
+                                        $http({
+                                        method: "POST",
+                                        url: $scope.baseUrl+"/users/create",
+                                        data: $scope.userTemp
+                                }).then(function(response) {
+                                 	$scope.sample = response;
+					var token = getCookie('CheeseDiary_token')
+					$scope.sample = token;
+					window.location.href="/userprofile/"+token;	
+				}, function (response) {
+        				$scope.sample = response;
+    				});
+                        };
+
+
+  
+});
+</script>
+
+</body>
+</html>
+
+

@@ -274,11 +274,11 @@
             </div>
             <div class="userprofile-usertitle">
             	<div class="profile-usertitle-name">
-                	<h2>{{user.display_name}} </h2>
+                	<h2>{{profile.name}} </h2>
                 </div>
                 <div class="profile-usertitle-location">
-                    {{user.name}}<br>
-                    {{user.email}}
+                    {{profile.location}}
+                    
                     
                 </div>
             </div>
@@ -290,7 +290,7 @@
         	<div class="col-sm-1 gutter">
             </div>
             <div id="addReviews" class="col-sm-10">
-            	<div class="row" ng-hide="{{current_user_id != profile_id}}">
+            	<div class="row">
                 	<div id="addCheese" class="col-sm-4 addRevNav" ng-click=" $event.stopPropagation();">
                     
                     
@@ -311,7 +311,7 @@
                     </div>
                     
                     <div id="addRevDetails" class="col-sm-4 addRevNav">
-                    	
+                    	AT
                     </div>
                    
                     
@@ -392,23 +392,11 @@
                                                 Suprised that name fit on the menu. Keep it less than 20 characters</h6>
 <br>
                             
-							Maker Name<br><select ng-model="cheeseTemp.maker_id" ng-disabled="addRevForm.existingCheese">
-        					<option ng-repeat="x in makerArr" value="{{x.id}}">{{x.name}} </option>
-                            <option value="-1">Tell us about a new maker </option>
-							</select><br>
+							Maker Name<br>
+        					<br><input type="text" value="{{profile.name}}" ng-disabled="true">                           
                             <button ng-disabled="!cheeseDetails.$valid" ng-hide="addRevForm.existingCheese" ng-click="storeCheese()">Add Cheese </button>
                             <br><br>
-                            <div ng-show="addRevForm.newMaker">
-                            	<h6> Help Us Get To Know Them Better </h6>
-								Maker Name<input name="makerInput" ng-maxlength="40" type="text" ng-model="makerTemp.name"><br>
-									<h6 class="error" ng-show="cheeseDetails.makerInput.$error.maxlength">
-                                                That actually fit on the sign? Keep it less than 40 characters</h6>
-								<br>
-								Maker Location<input name="locationInput" ng-maxlength="40" type="text" ng-model="makerTemp.location"><br><h6 class="error" ng-show="cheeseDetails.locationInput.$error.maxlength">
-                                                That actually fit on the sign? Keep it less than 40 characters</h6>									
-				<br><button ng-disabled="!cheeseDetails.$valid" ng-click="storeMaker()">Add maker </button>
-                   						             
-							</div>
+							
 								
 						</form>
                         
@@ -417,7 +405,7 @@
                     <div id="cheeseRight" class="col-sm-6 revHalf">
                     	<h2>{{cheeseTemp.name}}</h2>
                         <h4>{{cheeseTemp.maker_name}}</h4>
-                        <h4>{{makerTemp.name}}</h4>
+                        <h4>{{profile.name}}</h4>
                         <br> <br>
                         <button class="cBtn" ng-show="addRevForm.transition" ng-click="transitionClick()"> Cheese Complete. Tell me about the Shop </button>
                         
@@ -491,11 +479,14 @@
             </div>
         </div>
         <br><br><br>
+
+
         <div class="row" ng-repeat="x in revArr">
         	<div class="col-sm-2 gutter">
             </div>
             <div class="col-sm-9 displayReview" ng-show="x.upd">
             	<div class="reviewTitle">
+			<a href="{{baseUrl+'/userprofile/'+x.user_id}}"><b> {{x.display_name}} </b> </a> enjoyed
                 	<a href="{{baseUrl+'/cheeseprofile/'+x.cheese_id}}"> <b> {{x.cheese_name}}</b> </a> at the <a href="{{baseUrl+'/cheeseshopprofile/'+x.cheeseshop_id}}"> <b>{{x.cheeseshop_name}}</b></a>
                 </div>
                 <div class="revPic">
@@ -542,14 +533,16 @@
 <script>
 	var app = angular.module('myApp', []);
     app.controller("myCtrl", function($scope,$http, $location) {
-	$scope.profile_type= "users";
+	$scope.profile_type= "cheesemakers";
 	$scope.baseUrl = "https://static-pottery-164109.appspot.com";	
 	$scope.myUrl = $location.absUrl();
     	$scope.profile_id =  $scope.myUrl.split("/").pop();
 	$scope.current_user_admin = false;
 	$scope.current_user_id = "ahdzfnN0YXRpYy1wb3R0ZXJ5LTE2NDEwOXIRCxIEVXNlchiAgICAgOSRCQw";
-	
-	function getCookie(cname) {
+
+
+
+	        function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
     var ca = decodedCookie.split(';');
@@ -568,30 +561,27 @@
 var token = getCookie('CheeseDiary_token')
 var isAdmin = getCookie('CheeseDiary_isAdmin')
 if(token != "") {
-	$scope.current_user_id = token;
+        $scope.current_user_id = token;
 }
 
 if(isAdmin !=""){
-	if(isAdmin == "1") {
-		$scope.current_user_admin = true;
-	} else {
-		$scope.current_user_admin = false;
-	}
-} 
+        if(isAdmin == "1") {
+                $scope.current_user_admin = true;
+        } else {
+                $scope.current_user_admin = false;
+        }
+}
 
 if (token == "" || isAdmin == "") {
   window.location.href="/admin/home";
 }
-
-
-
 		
 
     	$scope.updLock=false;
         $scope.happy = "test";
         $scope.shoptest="";
 		
-	$scope.user = {name:"WUggle", display_name: "Hi Man", time_created: "Now"};        
+	$scope.profile = {name:"Wuggle", location: "Hi Man"};        
     	$scope.addRevForm = {};
         
         $scope.addRevForm.cID = "";
@@ -650,7 +640,7 @@ $scope.userCount=0;
 $scope.revCount=0;
 $scope.makerTemp={name: "", location: ""};
 $scope.shopTemp={city: "", name: "", country: "", zipcode: "", phone: "", state: "", street: "", id: ""};
-$scope.cheeseTemp={maker_id: "", name: "", id : ""};
+$scope.cheeseTemp={maker_id: $scope.profile_id, name: "", id : ""};
 $scope.userTemp={display_name: "", name: "", time_created: "", email: "", is_admin: false, id: ""};
 
 $scope.revTemp={rating: 3, tasting_notes: "", photo: "", user_id: "", cheeseshop_id: "", price_per_pound: 0, cheese_id: "", id: ""};
@@ -662,9 +652,9 @@ $scope.revTemp2={rating: 3, tasting_notes: "", photo: "", user_id: "", cheesesho
 
 $http({
         method : "GET",
-        url : $scope.baseUrl+"/users/"+ $scope.profile_id
+        url : $scope.baseUrl+"/cheesemakers/"+ $scope.profile_id
     }).then(function (response) {
-        $scope.user = response.data;
+        $scope.profile = response.data;
     }, function myError(response) {
         $scope.user.Name = response.statusText;
 	$scope.user.DisplayName = "Bad";
@@ -675,9 +665,9 @@ $http({
 
 $http({
         method : "GET",
-        url : $scope.baseUrl+"/cheesemakers"
+        url : $scope.baseUrl+"/users"
     }).then(function mySucces(response) {
-        $scope.makerArr = response.data;
+        $scope.userArr = response.data;
     });
 
 
@@ -700,12 +690,16 @@ $http({
         
     });
 
+$scope.happy = "Before get review call";
 $scope.getReviews= function() {
+
+$scope.happy = $scope.baseUrl+"/cheesemakers/"+$scope.profile_id+"/reviews";
 $http({
         method : "GET",
-        url : $scope.baseUrl+"/"+$scope.profile_type+"/"+$scope.profile_id+"/reviews"
+        url : $scope.baseUrl+"/cheesemakers/"+$scope.profile_id+"/reviews"
     }).then(function (response) {
         $scope.revArr = response.data;
+	$scope.happy ="Made it into the get reviews";
         var i;
         var rLen = $scope.revArr.length;
         for(i =0; i < rLen; i++){
@@ -755,6 +749,7 @@ $scope.addShop = function() {
 
 
 $scope.addCheese = function() {
+				$scope.cheeseTemp.maker_id=$scope.profile.id;
                                 $http({
                                         method: "POST",
                                         url: $scope.baseUrl+"/cheeses/create",
@@ -777,7 +772,7 @@ $scope.addCheese = function() {
 
 
 $scope.addRev = function() {
-                                $scope.revTemp2.user_id = $scope.user.id;
+                                $scope.revTemp2.user_id = $scope.current_user_id;
 				$scope.revTemp2.cheese_id = $scope.addRevForm.cID;
 				$scope.revTemp2.cheeseshop_id = $scope.addRevForm.sID;
 				$scope.happy = "Before HTTP call";
@@ -838,14 +833,11 @@ $scope.sinClick = function(x) {
                             
 
 		$scope.storeCheese=function(){
-        		if($scope.cheeseTemp.maker_id == "-1"){
-                            	$scope.addRevForm.newMaker = true;
-                                $scope.happy="success";
-                            } else {
+        		
                             	$scope.happy="fail";
         			$scope.addCheese();
                                 $scope.finishCheese();
-                            }
+                            
         
         	}
         

@@ -274,11 +274,13 @@
             </div>
             <div class="userprofile-usertitle">
             	<div class="profile-usertitle-name">
-                	<h2>{{user.display_name}} </h2>
+                	<h2>{{profile.name}} </h2>
                 </div>
                 <div class="profile-usertitle-location">
-                    {{user.name}}<br>
-                    {{user.email}}
+                    {{profile.street}}<br>
+                    {{profile.city}}, {{profile.state}} {{profile.zipcode}} <br>
+		    {{profile.country}} <br>
+		    {{profile.phone}} <br>
                     
                 </div>
             </div>
@@ -290,7 +292,7 @@
         	<div class="col-sm-1 gutter">
             </div>
             <div id="addReviews" class="col-sm-10">
-            	<div class="row" ng-hide="{{current_user_id != profile_id}}">
+            	<div class="row">
                 	<div id="addCheese" class="col-sm-4 addRevNav" ng-click=" $event.stopPropagation();">
                     
                     
@@ -311,14 +313,14 @@
                     </div>
                     
                     <div id="addRevDetails" class="col-sm-4 addRevNav">
-                    	
+                    	AT 
                     </div>
                    
                     
                     <div id="addShop" class="col-sm-4 addRevNav" ng-click=" $event.stopPropagation();">
                     
-                    
-                    	
+                    	<h2> <b>{{profile.name}}</b> </h2>
+                    	<!--
                         <input class="reviewInput sInput"  type="text" placeholder="{CheeseShop}" ng-model="shoptest" ng-focus="addRevForm.state = 2; addRevForm.mDD = true; $event.stopPropagation();">
 						<div id="mdList" ng-show="addRevForm.mDD">
 							<ul  class="nav nav-pills nav-stacked">
@@ -331,7 +333,7 @@
 							</ul>
 						</div> 
                         
-                        
+                        -->
                     </div>
                     
                     
@@ -339,7 +341,7 @@
                 </div>
                 
                         <form name="reviewDetails">                
-                <div class="row" ng-show="addRevForm.state==0 && addRevForm.cID != '' &&  addRevForm.sID != ''">
+                <div class="row" ng-show="addRevForm.state==0 && addRevForm.cID != '' ">
                    <div id="revLeft" class="col-sm-6 revHalf">
                     	<br>
 				
@@ -426,7 +428,7 @@
                 
 
 			<form name="shopDetails">
-                <div class="row" ng-show="addRevForm.state==2">
+                <div class="row" ng-show="false">
                 	<div id="shopLeft" class="col-sm-6 revHalf">
                     	
 							<input class="sInput" name="nameInput" ng-maxlength="20" type="text" ng-model="shopTemp.name" ng-disabled="addRevForm.existingShop">
@@ -542,14 +544,14 @@
 <script>
 	var app = angular.module('myApp', []);
     app.controller("myCtrl", function($scope,$http, $location) {
-	$scope.profile_type= "users";
+	$scope.profile_type= "cheeseshops";
 	$scope.baseUrl = "https://static-pottery-164109.appspot.com";	
 	$scope.myUrl = $location.absUrl();
     	$scope.profile_id =  $scope.myUrl.split("/").pop();
 	$scope.current_user_admin = false;
 	$scope.current_user_id = "ahdzfnN0YXRpYy1wb3R0ZXJ5LTE2NDEwOXIRCxIEVXNlchiAgICAgOSRCQw";
-	
-	function getCookie(cname) {
+
+	        function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
     var ca = decodedCookie.split(';');
@@ -568,23 +570,20 @@
 var token = getCookie('CheeseDiary_token')
 var isAdmin = getCookie('CheeseDiary_isAdmin')
 if(token != "") {
-	$scope.current_user_id = token;
+        $scope.current_user_id = token;
 }
 
 if(isAdmin !=""){
-	if(isAdmin == "1") {
-		$scope.current_user_admin = true;
-	} else {
-		$scope.current_user_admin = false;
-	}
-} 
+        if(isAdmin == "1") {
+                $scope.current_user_admin = true;
+        } else {
+                $scope.current_user_admin = false;
+        }
+}
 
 if (token == "" || isAdmin == "") {
   window.location.href="/admin/home";
 }
-
-
-
 		
 
     	$scope.updLock=false;
@@ -662,9 +661,9 @@ $scope.revTemp2={rating: 3, tasting_notes: "", photo: "", user_id: "", cheesesho
 
 $http({
         method : "GET",
-        url : $scope.baseUrl+"/users/"+ $scope.profile_id
+        url : $scope.baseUrl+"/cheeseshops/"+ $scope.profile_id
     }).then(function (response) {
-        $scope.user = response.data;
+        $scope.profile = response.data;
     }, function myError(response) {
         $scope.user.Name = response.statusText;
 	$scope.user.DisplayName = "Bad";
@@ -683,9 +682,9 @@ $http({
 
 $http({
         method : "GET",
-        url : $scope.baseUrl+"/cheeseshops"
+        url : $scope.baseUrl+"/users"
     }).then(function mySucces(response) {
-        $scope.shopArr = response.data;
+        $scope.userArr = response.data;
     });
 $http({
         method : "GET",
@@ -703,7 +702,7 @@ $http({
 $scope.getReviews= function() {
 $http({
         method : "GET",
-        url : $scope.baseUrl+"/"+$scope.profile_type+"/"+$scope.profile_id+"/reviews"
+        url : $scope.baseUrl+"/cheeseshops/"+$scope.profile_id+"/reviews"
     }).then(function (response) {
         $scope.revArr = response.data;
         var i;
@@ -777,17 +776,17 @@ $scope.addCheese = function() {
 
 
 $scope.addRev = function() {
-                                $scope.revTemp2.user_id = $scope.user.id;
+                                $scope.revTemp2.user_id = $scope.current_user_id;
 				$scope.revTemp2.cheese_id = $scope.addRevForm.cID;
-				$scope.revTemp2.cheeseshop_id = $scope.addRevForm.sID;
-				$scope.happy = "Before HTTP call";
+				$scope.revTemp2.cheeseshop_id = $scope.profile_id;
+				
                                 $http({
                                         method: "POST",
                                         url: $scope.baseUrl+"/reviews/create",
                                         data: angular.toJson($scope.revTemp2)
                                 }).then(function(response) {
                                         $scope.revTemp2=response.data;
-                                        $scope.happy = response;
+                                        
 					$scope.revTemp2.upd=true;
                                         $scope.revArr.unshift($scope.revTemp2);
                                         $scope.revTemp2={rating: 3, tasting_notes: "", photo: "", user_id: "", cheeseshop_id: "", price_per_pound: 0, cheese_id: "", id: ""};

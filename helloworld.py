@@ -4,47 +4,47 @@ import wsgiref.handlers
 import json
 from google.appengine.ext import ndb
 import webapp2
-
+import webapp2_extras
 
 
 
 class Cheese(ndb.Model):
-  Id=ndb.StringProperty()
-  Name=ndb.StringProperty()
-  MakerID=ndb.StringProperty()
+  id=ndb.StringProperty()
+  name=ndb.StringProperty()
+  maker_id=ndb.StringProperty()
  
 class CheeseShop(ndb.Model):
-  Id=ndb.StringProperty()
-  Name=ndb.StringProperty()
-  Phone=ndb.StringProperty()
-  Street=ndb.StringProperty()
-  City=ndb.StringProperty()
-  State=ndb.StringProperty()
-  Country=ndb.StringProperty()
-  ZipCode=ndb.StringProperty()
+  id=ndb.StringProperty()
+  name=ndb.StringProperty()
+  phone=ndb.StringProperty()
+  street=ndb.StringProperty()
+  city=ndb.StringProperty()
+  state=ndb.StringProperty()
+  country=ndb.StringProperty()
+  zipcode=ndb.StringProperty()
 
 class CheeseMaker(ndb.Model):
-  Id=ndb.StringProperty()
-  Name=ndb.StringProperty()
-  Location=ndb.StringProperty()
+  id=ndb.StringProperty()
+  name=ndb.StringProperty()
+  location=ndb.StringProperty()
 
 class User(ndb.Model):
-  Id=ndb.StringProperty()
-  Name=ndb.StringProperty()
-  DisplayName=ndb.StringProperty()
-  Email=ndb.StringProperty()
-  TimeCreated=ndb.StringProperty()
-  IsAdmin=ndb.BooleanProperty()  
+  id=ndb.StringProperty()
+  name=ndb.StringProperty()
+  display_name=ndb.StringProperty()
+  email=ndb.StringProperty()
+  time_created=ndb.StringProperty()
+  is_admin=ndb.BooleanProperty()  
 
 class Review(ndb.Model):
-  Id=ndb.StringProperty()
-  PricePerPound=ndb.IntegerProperty()
-  TastingNotes=ndb.StringProperty()
-  Rating=ndb.IntegerProperty()
-  Photo=ndb.StringProperty()
-  UserID=ndb.StringProperty()
-  CheeseID=ndb.StringProperty()
-  ShopID=ndb.StringProperty() 
+  id=ndb.StringProperty()
+  price_per_pound=ndb.IntegerProperty()
+  tasting_notes=ndb.StringProperty()
+  rating=ndb.IntegerProperty()
+  photo=ndb.StringProperty()
+  user_id=ndb.StringProperty()
+  cheese_id=ndb.StringProperty()
+  cheeseshop_id=ndb.StringProperty() 
 
 class c1(webapp2.RequestHandler):
   def get(self):
@@ -52,10 +52,12 @@ class c1(webapp2.RequestHandler):
     dictList = []; 
     for obj in cheeseList:
       dTemp=obj.to_dict()
-      mKey=ndb.Key(urlsafe=obj.MakerID)
-      mTemp=mKey.get()
-      dTemp['MakerName'] = mTemp.Name;
-      dictList.append(dTemp)
+      mKey=ndb.Key(urlsafe=obj.maker_id)
+      mTemp=mKey.get().to_dict()
+      biTemp={}
+      biTemp['cheese'] = dTemp;
+      biTemp['cheesemaker'] = mTemp;
+      dictList.append(biTemp)
     self.response.status=200;
     self.response.out.write(json.dumps(dictList));
 
@@ -101,11 +103,13 @@ class c2(webapp2.RequestHandler):
       cKey = ndb.Key(urlsafe=cID)
       tempCheese = cKey.get()
       dTemp=tempCheese.to_dict()
-      mKey=ndb.Key(urlsafe=tempCheese.MakerID)
-      mTemp=mKey.get()
-      dTemp['MakerName'] = mTemp.Name;
+      mKey=ndb.Key(urlsafe=tempCheese.maker_id)
+      mTemp=mKey.get().to_dict()
+      biTemp={}
+      biTemp['cheese'] = dTemp;
+      biTemp['cheesemaker'] = mTemp;
       self.response.status=200;
-      self.response.out.write(json.dumps(dTemp))
+      self.response.out.write(json.dumps(biTemp))
 
 
 class m2(webapp2.RequestHandler):
@@ -138,17 +142,17 @@ class r2(webapp2.RequestHandler):
       obj = rKey.get()
       dTemp=obj.to_dict()
       
-      sKey=ndb.Key(urlsafe=obj.ShopID)
+      sKey=ndb.Key(urlsafe=obj.shop_id)
       sTemp=sKey.get()
-      dTemp['ShopName'] = sTemp.Name;
+      dTemp['cheeseshop_name'] = sTemp.name;
 
-      cKey=ndb.Key(urlsafe=obj.CheeseID)
+      cKey=ndb.Key(urlsafe=obj.cheese_id)
       cTemp=cKey.get()
-      dTemp['CheeseName'] = cTemp.Name;
+      dTemp['cheese_name'] = cTemp.name;
 
-      uKey=ndb.Key(urlsafe=obj.UserID)
+      uKey=ndb.Key(urlsafe=obj.user_id)
       uTemp=uKey.get()
-      dTemp['UserName'] = uTemp.DisplayName;
+      dTemp['display_name'] = uTemp.display_name;
 
       self.response.out.write(json.dumps(dTemp))
 
@@ -159,15 +163,15 @@ class c3(webapp2.RequestHandler):
   def post(self): 
     newCheese = json.loads(self.request.body)
     cheeseObj = Cheese();
-    cheeseObj.Name=newCheese['Name']
-    cheeseObj.MakerID=newCheese['MakerID']
+    cheeseObj.name=newCheese['name']
+    cheeseObj.maker_id=newCheese['maker_id']
     cKey=cheeseObj.put()
-    cheeseObj.Id = cKey.urlsafe()
+    cheeseObj.id = cKey.urlsafe()
     cheeseObj.put()
     dTemp = cheeseObj.to_dict()
-    mKey=ndb.Key(urlsafe=cheeseObj.MakerID)
+    mKey=ndb.Key(urlsafe=cheeseObj.maker_id)
     mTemp=mKey.get()
-    dTemp['MakerName'] = mTemp.Name;
+    dTemp['maker_name'] = mTemp.name;
 
     self.response.write(json.dumps(dTemp))
       
@@ -175,15 +179,15 @@ class s3(webapp2.RequestHandler):
   def post(self): 
     newCheeseShop = json.loads(self.request.body)
     cheeseShopObj = CheeseShop();
-    cheeseShopObj.Name=newCheeseShop['Name']
-    cheeseShopObj.Phone=newCheeseShop['Phone']
-    cheeseShopObj.Street=newCheeseShop['Street']
-    cheeseShopObj.City=newCheeseShop['City']
-    cheeseShopObj.State=newCheeseShop['State']
-    cheeseShopObj.Country=newCheeseShop['Country']
-    cheeseShopObj.ZipCode=newCheeseShop['ZipCode']
+    cheeseShopObj.name=newCheeseShop['name']
+    cheeseShopObj.phone=newCheeseShop['phone']
+    cheeseShopObj.street=newCheeseShop['street']
+    cheeseShopObj.city=newCheeseShop['city']
+    cheeseShopObj.state=newCheeseShop['state']
+    cheeseShopObj.country=newCheeseShop['country']
+    cheeseShopObj.zipcode=newCheeseShop['zipcode']
     sKey=cheeseShopObj.put()
-    cheeseShopObj.Id = sKey.urlsafe()
+    cheeseShopObj.id = sKey.urlsafe()
     cheeseShopObj.put()
     self.response.write(json.dumps(cheeseShopObj.to_dict()))
 
@@ -192,10 +196,10 @@ class m3(webapp2.RequestHandler):
   def post(self): 
     newCheeseMaker = json.loads(self.request.body)
     cheeseMakerObj = CheeseMaker();
-    cheeseMakerObj.Name=newCheeseMaker['Name']
-    cheeseMakerObj.Location=newCheeseMaker['Location']
+    cheeseMakerObj.name=newCheeseMaker['name']
+    cheeseMakerObj.location=newCheeseMaker['location']
     mKey=cheeseMakerObj.put()
-    cheeseMakerObj.Id = mKey.urlsafe()
+    cheeseMakerObj.id = mKey.urlsafe()
     cheeseMakerObj.put()
     self.response.write(json.dumps(cheeseMakerObj.to_dict()))
 
@@ -205,14 +209,19 @@ class u3(webapp2.RequestHandler):
   def post(self): 
     newUser = json.loads(self.request.body)
     UserObj = User();
-    UserObj.Name=newUser['Name']
-    UserObj.DisplayName=newUser['DisplayName']
-    UserObj.Email=newUser['Email']
-    UserObj.TimeCreated=newUser['TimeCreated']
-    UserObj.IsAdmin=newUser['IsAdmin']
+    UserObj.name=newUser['name']
+    UserObj.display_name=newUser['display_name']
+    UserObj.email=newUser['email']
+    UserObj.time_created=None
+    UserObj.is_admin=False
+    value = "0"
+    if UserObj.is_admin:
+      value = "1"     
     uKey=UserObj.put()
-    UserObj.Id = uKey.urlsafe()
+    UserObj.id = uKey.urlsafe()
     UserObj.put()
+    self.response.set_cookie('CheeseDiary_token', UserObj.id, max_age=2147483647, domain='static-pottery-164109.appspot.com', secure=True)
+    self.response.set_cookie('CheeseDiary_isAdmin', value, max_age=2147483647 , domain='static-pottery-164109.appspot.com', secure=True)
     self.response.write(json.dumps(UserObj.to_dict()))
 
 
@@ -221,29 +230,29 @@ class r3(webapp2.RequestHandler):
   def post(self): 
     newRev = json.loads(self.request.body)
     revObj = Review();
-    revObj.Rating=newRev['Rating']
-    revObj.PricePerPound=newRev['PricePerPound']   
-    revObj.TastingNotes=newRev['TastingNotes']
-    revObj.Photo=newRev['Photo']
-    revObj.CheeseID=newRev['CheeseID']
-    revObj.ShopID=newRev['ShopID']
-    revObj.UserID=newRev['UserID']
+    revObj.rating=newRev['rating']
+    revObj.price_per_pound=newRev['price_per_pound']   
+    revObj.tasting_notes=newRev['tasting_notes']
+    revObj.photo=newRev['photo']
+    revObj.cheese_id=newRev['cheese_id']
+    revObj.cheeseshop_id=newRev['cheeseshop_id']
+    revObj.user_id=newRev['user_id']
     rKey=revObj.put()
-    revObj.Id = rKey.urlsafe()
+    revObj.id = rKey.urlsafe()
     revObj.put()
 
     dTemp = revObj.to_dict();
-    sKey=ndb.Key(urlsafe=revObj.ShopID)
+    sKey=ndb.Key(urlsafe=revObj.cheeseshop_id)
     sTemp=sKey.get()
-    dTemp['ShopName'] = sTemp.Name;
+    dTemp['cheeseshop_name'] = sTemp.name;
 
-    cKey=ndb.Key(urlsafe=revObj.CheeseID)
+    cKey=ndb.Key(urlsafe=revObj.cheese_id)
     cTemp=cKey.get()
-    dTemp['CheeseName'] = cTemp.Name;
+    dTemp['cheese_name'] = cTemp.name;
 
-    uKey=ndb.Key(urlsafe=revObj.UserID)
+    uKey=ndb.Key(urlsafe=revObj.user_id)
     uTemp=uKey.get()
-    dTemp['UserName'] = uTemp.DisplayName;
+    dTemp['display_name'] = uTemp.display_name;
 
     self.response.write(json.dumps(dTemp))
 
@@ -255,10 +264,10 @@ class c4(webapp2.RequestHandler):
       newCheese = json.loads(self.request.body);
       cKey = ndb.Key(urlsafe=cID);
       tempCheese = cKey.get()
-      if newCheese.has_key('Name'):
-        tempCheese.Name = newCheese['Name']
-      if newCheese.has_key('MakerID'):
-        tempCheese.MakerID = newCheese['MakerID']
+      if newCheese.has_key('name'):
+        tempCheese.name = newCheese['name']
+      if newCheese.has_key('maker_id'):
+        tempCheese.maker_id = newCheese['maker_id']
       tempCheese.put()
       self.response.out.write(json.dumps(tempCheese.to_dict()))
 
@@ -268,10 +277,10 @@ class m4(webapp2.RequestHandler):
       newCheeseMaker = json.loads(self.request.body);
       mKey = ndb.Key(urlsafe=mID);
       tempCheeseMaker = mKey.get()
-      if newCheeseMaker.has_key('Name'):
-        tempCheeseMaker.Name = newCheeseMaker['Name']
-      if newCheeseMaker.has_key('Location'):
-        tempCheeseMaker.Location = newCheeseMaker['Location']
+      if newCheeseMaker.has_key('name'):
+        tempCheeseMaker.name = newCheeseMaker['name']
+      if newCheeseMaker.has_key('location'):
+        tempCheeseMaker.location = newCheeseMaker['location']
       tempCheeseMaker.put()
       self.response.out.write(json.dumps(tempCheeseMaker.to_dict()))
 
@@ -282,18 +291,18 @@ class s4(webapp2.RequestHandler):
       newCheeseShop = json.loads(self.request.body);
       sKey = ndb.Key(urlsafe=sID);
       tempCheeseShop = sKey.get()
-      if newCheeseShop.has_key('Name'):
-        tempCheeseShop.Name = newCheeseShop['Name']
-      if newCheeseShop.has_key('Street'):
-        tempCheeseShop.Street = newCheeseShop['Street']
-      if newCheeseShop.has_key('City'):
-        tempCheeseShop.City = newCheeseShop['City']
-      if newCheeseShop.has_key('State'):
-        tempCheeseShop.State = newCheeseShop['State']
-      if newCheeseShop.has_key('ZipCode'):
-        tempCheeseShop.ZipCode = newCheeseShop['ZipCode']
-      if newCheeseShop.has_key('Phone'):
-        tempCheeseShop.Phone = newCheeseShop['Phone']
+      if newCheeseShop.has_key('name'):
+        tempCheeseShop.name = newCheeseShop['name']
+      if newCheeseShop.has_key('street'):
+        tempCheeseShop.street = newCheeseShop['street']
+      if newCheeseShop.has_key('city'):
+        tempCheeseShop.city = newCheeseShop['city']
+      if newCheeseShop.has_key('state'):
+        tempCheeseShop.state = newCheeseShop['state']
+      if newCheeseShop.has_key('zipcode'):
+        tempCheeseShop.zipcode = newCheeseShop['zipcode']
+      if newCheeseShop.has_key('phone'):
+        tempCheeseShop.phone = newCheeseShop['phone']
       tempCheeseShop.put()
       self.response.out.write(json.dumps(tempCheeseShop.to_dict()))
 
@@ -303,16 +312,16 @@ class u4(webapp2.RequestHandler):
       newUser = json.loads(self.request.body);
       uKey = ndb.Key(urlsafe=uID);
       tempUser = uKey.get()
-      if newUser.has_key('Name'):
-        tempUser.Name = newUser['Name']
-      if newUser.has_key('DisplayName'):
-        tempUser.DisplayName = newUser['DisplayName']
-      if newUser.has_key('TimeCreated'):
-        tempUser.TimeCreated = newUser['TimeCreated']
-      if newUser.has_key('Email'):
-        tempUser.Email = newUser['Email']
-      if newUser.has_key('IsAdmin'):
-        tempUser.IsAdmin = newUser['IsAdmin']
+      if newUser.has_key('name'):
+        tempUser.name = newUser['name']
+      if newUser.has_key('display_name'):
+        tempUser.display_name = newUser['display_name']
+      if newUser.has_key('time_created'):
+        tempUser.time_created = newUser['time_created']
+      if newUser.has_key('email'):
+        tempUser.email = newUser['email']
+      if newUser.has_key('is_admin'):
+        tempUser.is_admin = newUser['is_admin']
       tempUser.put()
       self.response.out.write(json.dumps(tempUser.to_dict()))
 
@@ -323,20 +332,20 @@ class r4(webapp2.RequestHandler):
       newRev = json.loads(self.request.body);
       rKey = ndb.Key(urlsafe=rID);
       tempRev = rKey.get()
-      if newRev.has_key('Rating'):
-        tempRev.Rating = newRev['Rating']
-      if newRev.has_key('PricePerPound'):
-        tempRev.PricePerPound = newRev['PricePerPound']
-      if newRev.has_key('TastingNotes'):
-        tempRev.TastingNotes = newRev['TastingNotes']
-      if newRev.has_key('Photo'):
-        tempRev.Photo = newRev['Photo']
-      if newRev.has_key('CheeseID'):
-        tempRev.CheeseID = newRev['CheeseID']
-      if newRev.has_key('ShopID'):
-        tempRev.ShopID = newRev['ShopID']
-      if newRev.has_key('UserID'):
-        tempRev.UserID = newRev['UserID']
+      if newRev.has_key('rating'):
+        tempRev.rating = newRev['rating']
+      if newRev.has_key('price_per_pound'):
+        tempRev.price_per_pound = newRev['price_per_pound']
+      if newRev.has_key('tasting_notes'):
+        tempRev.tasting_notes = newRev['tasting_notes']
+      if newRev.has_key('photo'):
+        tempRev.photo = newRev['photo']
+      if newRev.has_key('cheese_id'):
+        tempRev.cheese_id = newRev['cheese_id']
+      if newRev.has_key('cheeseshop_id'):
+        tempRev.cheeseshop_id = newRev['cheeseshop_id']
+      if newRev.has_key('user_id'):
+        tempRev.user_id = newRev['user_id']
       tempRev.put()
       self.response.out.write(json.dumps(tempRev.to_dict()))
 
@@ -348,19 +357,19 @@ class c5(webapp2.RequestHandler):
       revList= Review.query()
       dictList = []; 
       for obj in revList:
-        if obj.CheeseID == cID:
+        if obj.cheese_id == cID:
 	  dTemp =obj.to_dict();
-          sKey=ndb.Key(urlsafe=obj.ShopID)
+          sKey=ndb.Key(urlsafe=obj.cheeseshop_id)
           sTemp=sKey.get()
-          dTemp['ShopName'] = sTemp.Name;
+          dTemp['cheeseshop_name'] = sTemp.name;
 
-          cKey=ndb.Key(urlsafe=obj.CheeseID)
+          cKey=ndb.Key(urlsafe=obj.cheese_id)
           cTemp=cKey.get()
-          dTemp['CheeseName'] = cTemp.Name;
+          dTemp['cheese_name'] = cTemp.name;
 
-          uKey=ndb.Key(urlsafe=obj.UserID)
+          uKey=ndb.Key(urlsafe=obj.user_id)
           uTemp=uKey.get()
-          dTemp['UserName'] = uTemp.DisplayName;                    
+          dTemp['display_name'] = uTemp.display_name;                    
           dictList.append(dTemp)
       self.response.out.write(json.dumps(dictList))
        
@@ -371,17 +380,17 @@ class s5(webapp2.RequestHandler):
       revList= Review.query()
       dictList = []; 
       for obj in revList:
-        if obj.ShopID == sID:          
+        if obj.cheeseshop_id == sID:          
           dTemp =obj.to_dict();
-          sKey=ndb.Key(urlsafe=obj.ShopID)
+          sKey=ndb.Key(urlsafe=obj.cheeseshop_id)
           sTemp=sKey.get()
-          dTemp['ShopName'] = sTemp.Name;
-          cKey=ndb.Key(urlsafe=obj.CheeseID)
+          dTemp['cheeseshop_name'] = sTemp.name;
+          cKey=ndb.Key(urlsafe=obj.cheese_id)
           cTemp=cKey.get()
-          dTemp['CheeseName'] = cTemp.Name;
-          uKey=ndb.Key(urlsafe=obj.UserID)
+          dTemp['cheese_name'] = cTemp.name;
+          uKey=ndb.Key(urlsafe=obj.user_id)
           uTemp=uKey.get()
-          dTemp['UserName'] = uTemp.DisplayName;
+          dTemp['display_name'] = uTemp.display_name;
           dictList.append(dTemp)
       self.response.out.write(json.dumps(dictList))
        
@@ -392,17 +401,17 @@ class u5(webapp2.RequestHandler):
       revList= Review.query()
       dictList = []; 
       for obj in revList:
-        if obj.UserID == uID:          
+        if obj.user_id == uID:          
           dTemp =obj.to_dict();
-          sKey=ndb.Key(urlsafe=obj.ShopID)
+          sKey=ndb.Key(urlsafe=obj.cheeseshop_id)
           sTemp=sKey.get()
-          dTemp['ShopName'] = sTemp.Name;
-          cKey=ndb.Key(urlsafe=obj.CheeseID)
+          dTemp['cheeseshop_name'] = sTemp.name;
+          cKey=ndb.Key(urlsafe=obj.cheese_id)
           cTemp=cKey.get()
-          dTemp['CheeseName'] = cTemp.Name;
-          uKey=ndb.Key(urlsafe=obj.UserID)
+          dTemp['cheese_name'] = cTemp.name;
+          uKey=ndb.Key(urlsafe=obj.user_id)
           uTemp=uKey.get()
-          dTemp['UserName'] = uTemp.DisplayName;
+          dTemp['display_name'] = uTemp.display_name;
           dictList.append(dTemp)
       self.response.out.write(json.dumps(dictList))
         
@@ -414,21 +423,21 @@ class m5(webapp2.RequestHandler):
       dictList = [];
       outList =[];
       for obj in cheeseList:
-        if obj.MakerID == mID:          
+        if obj.maker_id == mID:          
           dictList.append(obj)
       for obj in dictList:
         for item in revList:
-          if (item.CheeseID == obj.Id):
+          if (item.cheese_id == obj.id):
 	    dTemp =item.to_dict();
-            sKey=ndb.Key(urlsafe=item.ShopID)
+            sKey=ndb.Key(urlsafe=item.cheeseshop_id)
             sTemp=sKey.get()
-            dTemp['ShopName'] = sTemp.Name;
-            cKey=ndb.Key(urlsafe=item.CheeseID)
+            dTemp['cheeseshop_name'] = sTemp.name;
+            cKey=ndb.Key(urlsafe=item.cheese_id)
             cTemp=cKey.get()
-            dTemp['CheeseName'] = cTemp.Name;
-            uKey=ndb.Key(urlsafe=item.UserID)
+            dTemp['cheese_name'] = cTemp.name;
+            uKey=ndb.Key(urlsafe=item.user_id)
             uTemp=uKey.get()
-            dTemp['UserName'] = uTemp.DisplayName;
+            dTemp['display_name'] = uTemp.display_name;
             outList.append(dTemp)
             
       self.response.out.write(json.dumps(outList))
