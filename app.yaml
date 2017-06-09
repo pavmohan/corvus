@@ -16,30 +16,28 @@ handlers:
   static_files: admin/static/\1.html
   upload: admin/static/(.+)
   
-- url: /test.html
-  static_files: test.html
-  upload: test.html
-
-- url: /main.html
-  static_files: main.html
-  upload: main.html
-
-- url: /userprofile.htm
-  static_files: userprofile.htm
-  upload: userprofile.htm
+- url: /createyouraccount.html
+  static_files: createaccount.html
+  upload: createaccount.html
 
 
-- url: /cheeseprofile.htm
-  static_files: cheeseprofile.htm
-  upload: cheeseprofile.htm
+- url: /userprofile/.*
+  static_files: userprofile.html
+  upload: userprofile.html
 
-- url: /cheesemakerprofile.htm
-  static_files: cheesemakerprofile.htm
-  upload: cheesemakerprofile.htm
 
-- url: /cheeseshopprofile.htm
-  static_files: cheeseshopprofile.htm
-  upload: cheeseshopprofile.htm
+- url: /cheeseprofile/.*
+  static_files: cheeseprofile.html
+  upload: cheeseprofile.html
+
+- url: /cheesemakerprofile/.*
+  static_files: cheesemakerprofile.html
+  upload: cheesemakerprofile.html
+
+- url: /cheeseshopprofile/.*
+  static_files: cheeseshopprofile.html
+  upload: cheeseshopprofile.html
+
 
 
 
